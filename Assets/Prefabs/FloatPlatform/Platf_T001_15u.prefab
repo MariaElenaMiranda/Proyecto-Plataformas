@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4101554337689295131, guid: 4aa5499e69b35472d820f220d25d2813, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.049999237
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4126002973079639328, guid: 4aa5499e69b35472d820f220d25d2813, type: 3}
       propertyPath: m_Size.x
@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6193811764350160865, guid: 4aa5499e69b35472d820f220d25d2813, type: 3}
       propertyPath: m_Name
-      value: Platf_T001_15u Variant
+      value: Platf_T001_15u
       objectReference: {fileID: 0}
     - target: {fileID: 7964935863581369727, guid: 4aa5499e69b35472d820f220d25d2813, type: 3}
       propertyPath: m_Size.x
