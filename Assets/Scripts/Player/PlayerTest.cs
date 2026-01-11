@@ -17,6 +17,10 @@ public class PlayerTest : MonoBehaviour
     public float fallMultiplier = 2.5f;
     private float defaultGravity;
 
+    // Variables de suavizado
+    public float smoothTime = 0.1f;
+    private float smoothSpeed;
+
     private Rigidbody2D rb;
 
     void Start()
@@ -43,7 +47,14 @@ public class PlayerTest : MonoBehaviour
         else playerMovement = moveSpeed;
 
         // 3. APLICAR VELOCIDAD
-        rb.velocity = new Vector2(move * playerMovement, rb.velocity.y);
+        float fullSpeed = move * playerMovement;
+        float SmoothSpeed = Mathf.SmoothDamp(
+            rb.velocity.x,
+            fullSpeed,
+            ref smoothSpeed,
+            smoothTime
+        );
+        rb.velocity = new Vector2(SmoothSpeed, rb.velocity.y);
 
         // 4. SALTO Y DOBLE SALTO
         bool isGrounded = Mathf.Abs(rb.velocity.y) < 0.01f;
