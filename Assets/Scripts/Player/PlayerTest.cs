@@ -31,6 +31,7 @@ public class PlayerTest : MonoBehaviour
 
     void Update()
     {
+        if(Time.timeScale == 0f) return;
         Movement();
     }
 
