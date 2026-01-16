@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7930276975920292650}
   - component: {fileID: 4126002973079639328}
   - component: {fileID: 7964935863581369727}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tile (15)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 4101554337689295131}
   - component: {fileID: 5273559229655143586}
   - component: {fileID: 3184656564423106265}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tile (14)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +269,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1767818907863772}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Platf_T001_5u-def
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -305,7 +305,7 @@ GameObject:
   - component: {fileID: 5577196033463027824}
   - component: {fileID: 7730748932891717287}
   - component: {fileID: 312569509231524642}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tile (16)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
