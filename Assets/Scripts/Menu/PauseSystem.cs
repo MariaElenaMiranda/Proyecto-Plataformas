@@ -78,13 +78,6 @@ public class PauseSystem : MonoBehaviour
         }
     }
 
-    //ExitButton
-    public void Exit()
-    {
-        // Start the exit sequence with sound
-        StartCoroutine(ExitSequence());
-    }
-
     public void PlayHoverSound()
     {
         // Plays the UI hover sound effect
@@ -138,25 +131,5 @@ public class PauseSystem : MonoBehaviour
         yield return StartCoroutine(FadeOutSequence()); // Wait for FadeOut to finish
 
         SceneManager.LoadScene(sceneName);
-    }
-
-    IEnumerator ExitSequence()
-    {
-        isTransitioning = true;
-        // Ensure time runs so WaitForSeconds works (since game might be paused)
-        Time.timeScale = 1f;
-
-        if(clickSound != null && soundEffect != null)
-        {
-            soundEffect.PlayOneShot(clickSound);
-             // Wait exactly the length of the audio
-            yield return new WaitForSeconds(clickSound.length);
-        }else
-        {
-            yield return new WaitForSeconds(0.5f); // Default wait if no sound
-        }
-
-        Debug.Log("Exiting game...");
-        Application.Quit();
     }
 }

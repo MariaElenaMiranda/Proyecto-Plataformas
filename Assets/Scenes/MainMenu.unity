@@ -321,6 +321,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2062401699}
     m_Modifications:
+    - target: {fileID: 370841042963358215, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
+      propertyPath: m_text
+      value: Jugar
+      objectReference: {fileID: 0}
+    - target: {fileID: 370841042963358215, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
+      propertyPath: m_fontSize
+      value: 72
+      objectReference: {fileID: 0}
     - target: {fileID: 2275038881756924614, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
       propertyPath: m_Name
       value: Menu
@@ -404,6 +412,10 @@ PrefabInstance:
     - target: {fileID: 3940845409664959814, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649433569957150623, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
+      propertyPath: m_text
+      value: Salir
       objectReference: {fileID: 0}
     - target: {fileID: 8488337736533062436, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
       propertyPath: blackScreen
