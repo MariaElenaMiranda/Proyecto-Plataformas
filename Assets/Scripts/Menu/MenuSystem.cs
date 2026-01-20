@@ -32,7 +32,7 @@ public class MenuSystem : MonoBehaviour
     public void Play()
     {
         // Check if we are already changing scenes
-        if(!isTransitioning) StartCoroutine(ChangeSceneSequence("MapTest"));
+        if(!isTransitioning) StartCoroutine(ChangeSceneSequence("Map"));
     }
 
 
