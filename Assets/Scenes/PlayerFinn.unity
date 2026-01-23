@@ -1995,7 +1995,7 @@ Transform:
   m_GameObject: {fileID: 510533321}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.83, z: -10}
+  m_LocalPosition: {x: 0.27, y: 3.842, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4560,7 +4560,7 @@ Transform:
   m_GameObject: {fileID: 1092342135}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.83, z: -10}
+  m_LocalPosition: {x: 0.27, y: 3.842, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5479,6 +5479,8 @@ MonoBehaviour:
   detectionRadius: 5
   moveSpeed: 2
   reboundForce: 5
+  live: 20
+  attackDamage: 10
   groundCheck: {fileID: 1560303268}
   groundCheckDistance: 0.5
   groundLayer:
@@ -6621,8 +6623,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  jumpForce: 7
-  reboundForce: 6
+  playerMovement: 0
+  sprint: 0
+  jumpForce: 5
+  reboundForce: 5
   mana: 100
   manaRegenPorcent: 5
   maxMana: 100
@@ -6630,9 +6634,12 @@ MonoBehaviour:
   liveRegenPorcent: 5
   maxLive: 100
   lengthRay: 0.55
+  fallMultiplier: 2.5
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  isDead: 0
+  smoothTime: 0.1
   animator: {fileID: 1650664062}
 --- !u!212 &1650664059
 SpriteRenderer:
@@ -6695,7 +6702,7 @@ Transform:
   m_GameObject: {fileID: 1650664055}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.83, z: 0}
+  m_LocalPosition: {x: 0.27, y: 3.842, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

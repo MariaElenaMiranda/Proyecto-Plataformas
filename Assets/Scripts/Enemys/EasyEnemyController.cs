@@ -17,6 +17,9 @@ public class EasyEnemyController : MonoBehaviour
 
     private bool isMoving;
 
+    public float live = 20f;
+    private bool isDead;
+
     private Animator animator;
     private bool takeDamage = false;
     public float attackDamage = 10f;
@@ -25,10 +28,13 @@ public class EasyEnemyController : MonoBehaviour
     public float groundCheckDistance = 0.5f;
     public LayerMask groundLayer;
 
+    private bool playerAlive;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
@@ -36,6 +42,17 @@ public class EasyEnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (playerAlive && !isDead)
+        {
+            Movement();
+        }
+
+        //rb.MovePosition(rb.position + movement * moveSpeed * Time.deltaTime);
+        animator.SetBool("isMoving", isMoving);
+        animator.SetBool("isDead", isDead);
+    }
+
+    private void Movement() {
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
         RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
@@ -47,7 +64,7 @@ public class EasyEnemyController : MonoBehaviour
         if (distanceToPlayer < detectionRadius)
         {
             Vector2 direction = (player.position - transform.position).normalized;
-            
+
             if (direction.x < 0)
             {
                 transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
@@ -57,9 +74,9 @@ public class EasyEnemyController : MonoBehaviour
                 transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
             }
 
-            if (hasGround)
+            if (hasGround && playerAlive && !isDead)
             {
-                movementX = direction.x ;
+                movementX = direction.x;
 
                 isMoving = true;
 
@@ -70,13 +87,11 @@ public class EasyEnemyController : MonoBehaviour
                 isMoving = false;
             }
         }
-        else {
-            movementX = 0; 
+        else
+        {
+            movementX = 0;
             isMoving = false;
         }
-
-        //rb.MovePosition(rb.position + movement * moveSpeed * Time.deltaTime);
-        animator.SetBool("isMoving", isMoving);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -85,7 +100,15 @@ public class EasyEnemyController : MonoBehaviour
         {
             Vector2 damageDirection = new Vector2(transform.position.x, 0);
 
-            collision.gameObject.GetComponent<PlayerTest>().TakeDamage(damageDirection, attackDamage);
+            PlayerTest playerScript = collision.gameObject.GetComponent<PlayerTest>();
+
+            playerScript.TakeDamage(damageDirection, attackDamage);
+            playerAlive = !playerScript.isDead;
+
+            if (!playerAlive) { 
+                movementX = 0;
+                isMoving = false;
+            }
         }
     }
 
@@ -94,14 +117,21 @@ public class EasyEnemyController : MonoBehaviour
         if (collision.gameObject.CompareTag("sword"))
         {
             Vector2 damageDirection = new Vector2(collision.gameObject.transform.position.x, 0);
+            PlayerTest player = collision.GetComponentInParent<PlayerTest>();
 
-            TakeDamage(damageDirection, 1);
+            TakeDamage(damageDirection, player.attackDamage);
+
         }
     }
 
     private void FixedUpdate()
     {
-        if(!takeDamage) { 
+        if (isDead)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+        if (!takeDamage) { 
             rb.velocity = new Vector2(movementX * moveSpeed, rb.velocity.y);
    
         }
@@ -121,14 +151,23 @@ public class EasyEnemyController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(Vector2 direction, int amountDamage)
+    public void TakeDamage(Vector2 direction, float amountDamage)
     {
         if (!takeDamage)
         {
             takeDamage = true;
-            Vector2 rebound = new Vector2(transform.position.x - direction.x, 1).normalized;
-            rb.AddForce(rebound * reboundForce, ForceMode2D.Impulse);
-            StartCoroutine(DisableDamage());
+            live -= amountDamage;
+            if (live <= 0)
+            {
+                isDead = true;  
+                isMoving = false;
+            }
+            else
+            {
+                Vector2 rebound = new Vector2(transform.position.x - direction.x, 1).normalized;
+                rb.AddForce(rebound * reboundForce, ForceMode2D.Impulse);
+                StartCoroutine(DisableDamage());
+            }
         }
     }
 
@@ -137,5 +176,9 @@ public class EasyEnemyController : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         takeDamage = false;
         rb.velocity = Vector2.zero;
+    }
+
+    public void DeleteBody() { 
+        Destroy(gameObject);
     }
 }
