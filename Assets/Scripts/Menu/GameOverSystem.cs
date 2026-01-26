@@ -9,8 +9,9 @@ public class GameOverSystem : MonoBehaviour
     public CanvasGroup blackScreen;
     public float fadeSpeed = 2.0f;
 
-    [Header("Sounds")]
-    public AudioSource soundEffect;
+    [Header("Audio Settings")]
+    public AudioSource backgroundMusic; //For background music
+    public AudioSource soundEffect; //For UI sounds
     public AudioClip hoverSound;
     public AudioClip clickSound;
 
@@ -20,6 +21,9 @@ public class GameOverSystem : MonoBehaviour
     {
         // Since we likely came from a paused game state (death), we must reset time.
         Time.timeScale = 1f;
+
+        // Force loop just in case
+        if(backgroundMusic != null) backgroundMusic.loop = true;
 
         if(blackScreen != null)
         {
@@ -54,17 +58,26 @@ public class GameOverSystem : MonoBehaviour
 
     IEnumerator FadeInSequence()
     {
+        // Ensure music starts playing
+        if(backgroundMusic != null && !backgroundMusic.isPlaying) backgroundMusic.Play();
+
         float timer = 1;
         while(timer > 0)
         {
             // Reduces alpha from 1 (black) to 0 (transparent)
             timer -= Time.deltaTime * fadeSpeed;
             blackScreen.alpha = timer;
+
+            // Volume goes up as Alpha goes down
+            if(backgroundMusic != null) backgroundMusic.volume = 1 - timer;
+
             yield return null; // Wait for next frame
         }
 
         blackScreen.alpha = 0; // Ensure alpha is exactly 0
         blackScreen.blocksRaycasts = false;
+
+        if(backgroundMusic != null) backgroundMusic.volume = 1f; // Max volume
     }
 
     IEnumerator FadeOutSequence()
@@ -78,8 +91,13 @@ public class GameOverSystem : MonoBehaviour
             // Increases alpha from 0 (transparent) to 1 (black)
             timer += Time.deltaTime * fadeSpeed;
             blackScreen.alpha = timer;
+
+            // Volume goes down as Alpha goes up
+            if(backgroundMusic != null) backgroundMusic.volume = 1 - timer;
+
             yield return null;
         }
+        if(backgroundMusic != null) backgroundMusic.volume = 0f; // Silence
     }
 
     IEnumerator ChangeSceneSequence(string sceneName)
