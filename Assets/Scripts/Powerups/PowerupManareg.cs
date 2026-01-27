@@ -4,19 +4,18 @@ using UnityEngine;
 
 public class PowerupManareg : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float value = 0.25f;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Destroy(gameObject);
+        if (collision.CompareTag("Player"))
+        {
+            PlayerTest player = collision.GetComponent<PlayerTest>();
+            if (player != null)
+            {
+                player.IncreaseManaRegen(value);
+                Destroy(gameObject);
+            }
+        }
     }
 }
