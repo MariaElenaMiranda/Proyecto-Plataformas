@@ -12,7 +12,7 @@ public class PlayerTest : MonoBehaviour
     public float reboundForce = 5f;
 
     public float mana = 100f;
-    public float manaRegenPorcent = 5f;
+    public float manaRegenPercent = 5f;
     public float maxMana = 100f;
 
     public float live = 100f;
@@ -62,7 +62,7 @@ public class PlayerTest : MonoBehaviour
             RegenerateLive();
             Jump();
 
-            if (Input.GetKey(KeyCode.Z) && !isAttacking ) {
+            if (Input.GetKey(KeyCode.F) && !isAttacking ) {
                 Attack();
             }
 
@@ -135,7 +135,7 @@ public class PlayerTest : MonoBehaviour
     {
         if(!isAttacking && mana < maxMana && !takeDamage)
         {
-            mana += (manaRegenPorcent/100) * Time.deltaTime;
+            mana += (manaRegenPercent/100) * Time.deltaTime;
             if (mana > maxMana)
             {
                 mana = maxMana;
@@ -222,5 +222,22 @@ public class PlayerTest : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * lengthRay);
     }
 
+    // Powerups
+
+    public void IncreaseLifeRegen(float percent)
+    {
+        this.liveRegenPorcent += this.liveRegenPorcent * percent;
+    }
+    public void IncreaseManaRegen(float percent)
+    {
+        this.manaRegenPercent += this.manaRegenPercent * percent;
+    }
+    public void IncreaseAttackDamage(float percent)
+    {
+        this.attackDamage += this.attackDamage * percent;
+    }
+    public void IncreaseSpeedMovement(float percent)
+    {
+        this.moveSpeed += this.moveSpeed * percent;
+    }
 }
- 
