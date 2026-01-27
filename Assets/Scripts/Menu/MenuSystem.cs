@@ -9,8 +9,9 @@ public class MenuSystem : MonoBehaviour
     public CanvasGroup blackScreen;
     public float fadeSpeed = 2.0f;
 
-    [Header("Sounds")]
-    public AudioSource soundEffect;
+    [Header("Audio Settings")]
+    public AudioSource backgroundMusic; // For background music
+    public AudioSource soundEffect; // For UI sounds
     public AudioClip hoverSound;
     public AudioClip clickSound;
 
@@ -18,6 +19,9 @@ public class MenuSystem : MonoBehaviour
 
     void Start()
     {
+        // Force loop just in case
+        if(backgroundMusic != null) backgroundMusic.loop = true;
+
         if(blackScreen != null)
         {
             blackScreen.alpha = 1; // Set screen to black initially
@@ -58,17 +62,26 @@ public class MenuSystem : MonoBehaviour
 
     IEnumerator FadeInSequence()
     {
+        // Ensure music starts playing
+        if(backgroundMusic != null && !backgroundMusic.isPlaying) backgroundMusic.Play();
+
         float timer = 1;
         while(timer > 0)
         {
             // Reduces alpha from 1 (black) to 0 (transparent)
             timer -= Time.deltaTime * fadeSpeed;
             blackScreen.alpha = timer;
+
+            // Volume goes up as Alpha goes down
+            if(backgroundMusic != null) backgroundMusic.volume = 1 - timer;
+
             yield return null; // Wait for next frame
         }
 
         blackScreen.alpha = 0; // Ensure alpha is exactly 0
         blackScreen.blocksRaycasts = false;
+
+        if(backgroundMusic != null) backgroundMusic.volume = 1f; // Max volume
     }
 
     IEnumerator FadeOutSequence()
@@ -82,8 +95,13 @@ public class MenuSystem : MonoBehaviour
             // Increases alpha from 0 (transparent) to 1 (black)
             timer += Time.deltaTime * fadeSpeed;
             blackScreen.alpha = timer;
+
+             // Volume goes down as Alpha goes up
+            if(backgroundMusic != null) backgroundMusic.volume = 1 - timer;
+
             yield return null;
         }
+        if(backgroundMusic != null) backgroundMusic.volume = 0f; // Silence
     }
 
     IEnumerator ChangeSceneSequence(string sceneName)
@@ -105,15 +123,13 @@ public class MenuSystem : MonoBehaviour
         // Ensure time runs (consistency with PauseSystem)
         Time.timeScale = 1f;
 
+        // Play the click sound immediately
         if(clickSound != null && soundEffect != null)
         {
             soundEffect.PlayOneShot(clickSound);
-            // Wait exactly the length of the audio
-            yield return new WaitForSeconds(clickSound.length);
-        }else
-        {
-            yield return new WaitForSeconds(0.5f); // Default wait if no sound
         }
+        // This ensures the screen turns black and music fades out smoothly before quitting.
+        yield return StartCoroutine(FadeOutSequence()); // Wait for FadeOut to finish
 
         Debug.Log("Exiting game...");
         Application.Quit();
