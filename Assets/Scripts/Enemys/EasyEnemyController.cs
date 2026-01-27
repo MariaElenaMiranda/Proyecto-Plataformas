@@ -60,7 +60,6 @@ public class EasyEnemyController : MonoBehaviour
         bool hasGround = hit.collider != null;
 
 
-
         if (distanceToPlayer < detectionRadius)
         {
             Vector2 direction = (player.position - transform.position).normalized;

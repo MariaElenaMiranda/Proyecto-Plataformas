@@ -1,0 +1,275 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using UnityEngine;
+
+public class MediumEnemyController : MonoBehaviour
+{
+
+    public Transform player;
+
+    public float detectionRadius = 5f;
+    public float attackRadius = 3.5f;
+    public float moveSpeed = 2.0f;
+    public float reboundForce = 5f;
+
+    private Rigidbody2D rb;
+    private float movementX;
+
+    private bool isGrounded;
+    private bool wasGrounded;
+    private bool isFalling;
+
+    private bool isAttacking;
+    public float attackDelay = 3f;
+    private float nextAttackTime = 0f;
+    public float meleeAttackDamage = 2f;
+    public float attackDamage = 10f;
+
+    public float live = 20f;
+    public float minFallSpeed = 10f;
+    public float fallDamageMultiplier = 1.5f;
+    private float maxFallSpeed;
+
+    private bool isDead;
+
+    private Animator animator;
+    private bool takeDamage = false;
+    
+    public Transform groundCheck;
+    public float groundCheckDistance = 0.5f;
+    public LayerMask groundLayer;
+
+    private bool playerAlive;
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        playerAlive= true;
+        rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (playerAlive && !isDead)
+        {
+            Movement();
+        }
+
+        UpdateGroundedState();
+        UpdateFallState();
+        animator.SetBool("isDead", isDead);
+        animator.SetBool("isAttacking", isAttacking);
+        
+        animator.SetBool("isGrounded", isGrounded);
+        animator.SetFloat("verticalSpeed", rb.velocity.y);
+        animator.SetFloat("speed", Mathf.Abs(movementX));
+
+
+    }
+
+    private void Movement() {
+        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= attackRadius)
+        {
+            Attack();
+            return;
+        }
+        else if (distanceToPlayer < detectionRadius)
+        {
+            Vector2 direction = (player.position - transform.position).normalized;
+
+            if (direction.x < 0)
+            {
+                transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
+            }
+            else if (direction.x > 0)
+            {
+                transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
+            }
+
+            if (isGrounded && playerAlive && !isDead)
+            {
+                movementX = direction.x;
+
+              
+
+            }
+            else
+            {
+                movementX = 0;
+               
+            }
+        }
+        else
+        {
+            movementX = 0;
+           
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            Vector2 damageDirection = new Vector2(transform.position.x, 0);
+
+            PlayerTest playerScript = collision.gameObject.GetComponent<PlayerTest>();
+            if (isAttacking) { 
+                playerScript.TakeDamage(damageDirection, attackDamage * meleeAttackDamage);
+            }
+            else { 
+                playerScript.TakeDamage(damageDirection, attackDamage);
+            }
+
+            playerAlive = !playerScript.isDead;
+
+            if (!playerAlive) { 
+                movementX = 0;
+                
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("sword"))
+        {
+            Vector2 damageDirection = new Vector2(collision.gameObject.transform.position.x, 0);
+            PlayerTest player = collision.GetComponentInParent<PlayerTest>();
+
+            TakeDamage(damageDirection, player.attackDamage);
+
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (isDead)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+        if (!takeDamage) { 
+            rb.velocity = new Vector2(movementX * moveSpeed, rb.velocity.y);
+   
+        }
+    }
+
+    private void UpdateGroundedState()
+    {
+        wasGrounded = isGrounded;
+        RaycastHit2D hit = Physics2D.Raycast(
+            groundCheck.position,
+            Vector2.down,
+            groundCheckDistance,
+            groundLayer
+        );
+
+        isGrounded = hit.collider != null;
+
+        if(!wasGrounded && isGrounded)
+        {
+
+            animator.SetTrigger("land");
+            ApplyFallDamage();
+            maxFallSpeed = 0f;
+        }
+    }
+
+    private void UpdateFallState()
+    {
+        if (!isGrounded && rb.velocity.y < -0.1f)
+        {
+            isFalling = true;
+            maxFallSpeed = Mathf.Max(maxFallSpeed, Mathf.Abs(rb.velocity.y));
+        }
+        else
+        {
+            isFalling = false;
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, attackRadius);
+
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckDistance);
+        }
+    }
+
+    public void Attack() {
+        
+        if (isGrounded && !isFalling && Time.time >= nextAttackTime && !takeDamage)
+        {
+            movementX = 0;
+            isAttacking = true;
+            StartCoroutine(PerformAttack());
+            nextAttackTime = Time.time + attackDelay;
+        }
+    }
+
+    private void ApplyFallDamage()
+    {
+        float fallSpeed = Mathf.Abs(maxFallSpeed);
+
+        if (fallSpeed >= minFallSpeed)
+        {
+            float damage = (fallSpeed - minFallSpeed) * fallDamageMultiplier;
+
+            TakeDamage(new Vector2(transform.position.x, 0), damage);
+        }
+    }
+
+    public void TakeDamage(Vector2 direction, float amountDamage)
+    {
+        if (!takeDamage && !isAttacking)
+        {
+            takeDamage = true;
+            animator.SetTrigger("hit");
+            live -= amountDamage;
+            if (live <= 0)
+            {
+                isDead = true;  
+                
+                isAttacking = false;
+            }
+            else
+            {
+                Vector2 rebound = new Vector2(transform.position.x - direction.x, 1).normalized;
+                rb.AddForce(rebound * reboundForce, ForceMode2D.Impulse);
+                StartCoroutine(DisableDamage());
+            }
+        }
+    }
+
+    IEnumerator DisableDamage()
+    {
+        yield return new WaitForSeconds(0.5f);
+        takeDamage = false;
+        
+    }
+
+    IEnumerator PerformAttack()
+    {
+        
+        yield return new WaitForSeconds(0.5f);
+        isAttacking = false;
+    }
+
+    public void DeleteBody() { 
+        Destroy(gameObject);
+    }
+}

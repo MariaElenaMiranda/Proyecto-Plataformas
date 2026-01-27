@@ -35,6 +35,7 @@ public class PlayerTest : MonoBehaviour
     public bool isDead;
     private bool isAttacking;
     public float attackDamage = 10;
+    private float originalDamage;
 
     //// Variables de suavizado
     public float smoothTime = 0.1f;
@@ -48,6 +49,7 @@ public class PlayerTest : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         defaultGravity = rb.gravityScale;
+        originalDamage = attackDamage;
     }
 
     void Update()
@@ -180,15 +182,27 @@ public class PlayerTest : MonoBehaviour
 
     public void Attack()
     {
-        if (mana >= 5) { 
-            isAttacking = true;
-            mana -= 5f;
+
+        if (mana >= 15) {
+            if (sprint)
+            {
+                isAttacking = true;
+                mana -= 15f;
+                attackDamage = attackDamage * 2;
+            }
+            else { 
+            
+                isAttacking = true;
+                mana -= 5f;
+            }
+
         }
     }
 
     public void DisableAttack()
     {
         isAttacking = false;
+        attackDamage = originalDamage;
     }
 
     private void Gravity() {
