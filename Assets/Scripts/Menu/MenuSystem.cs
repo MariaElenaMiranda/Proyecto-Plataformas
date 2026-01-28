@@ -20,8 +20,15 @@ public class MenuSystem : MonoBehaviour
 
     void Start()
     {
+        // Ensure game runs at normal speed
+        Time.timeScale = 1f;
+
         // Force loop just in case
-        if(backgroundMusic != null) backgroundMusic.loop = true;
+        if(backgroundMusic != null)
+        {
+            backgroundMusic.loop = true;
+            backgroundMusic.volume = 0; // Start silent for Fade In
+        }
 
         if(blackScreen != null)
         {
@@ -29,8 +36,6 @@ public class MenuSystem : MonoBehaviour
             blackScreen.blocksRaycasts = false; // Allow clicks to pass through
             StartCoroutine(FadeInSequence()); // Start fading in
         }
-        // Ensure game runs at normal speed
-        Time.timeScale = 1f;
     }
 
     //Play Button

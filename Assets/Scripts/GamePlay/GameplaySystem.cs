@@ -11,8 +11,9 @@ public class GameplaySystem : MonoBehaviour
 
     [Header("Audio Settings")]
     public AudioSource mainThemeMusic;
-    public AudioSource auxMusicSource; // The second source used for crossfading
-    public AudioLowPassFilter musicFilter;
+    public AudioSource bossThemeMusic; // The second source used for crossfading
+    public AudioLowPassFilter mainFilter; // Filtro del Bosque
+    public AudioLowPassFilter bossFilter;  // Filtro del Boss
     public float pausedFrequency = 500f;// Sounds like being underwater
     private float defaultFrequency = 22000f; // Fully open, clean sound
     public float pausedVolume = 0.3f;
@@ -22,11 +23,9 @@ public class GameplaySystem : MonoBehaviour
 
     void Start()
     {
-        // If I forgot to assign it in the Inspector, find it automatically
-        if(musicFilter == null) musicFilter = GetComponent<AudioLowPassFilter>();
-
         // Always make sure the game starts with clean audio
-        if(musicFilter != null) musicFilter.cutoffFrequency = defaultFrequency;
+        if(mainFilter != null) mainFilter.cutoffFrequency = defaultFrequency;
+        if(bossFilter != null) bossFilter.cutoffFrequency = defaultFrequency;
 
         if(mainThemeMusic != null)
         {
@@ -144,7 +143,7 @@ public class GameplaySystem : MonoBehaviour
         float startVolume = mainThemeMusic.volume;
 
         // Get current frequency safely to avoid null errors
-        float startFrequency = (musicFilter != null) ? musicFilter.cutoffFrequency : defaultFrequency;
+        float startFrequency = (mainFilter != null) ? mainFilter.cutoffFrequency : defaultFrequency;
         float time = 0;
 
         while(time < 1)
@@ -154,16 +153,19 @@ public class GameplaySystem : MonoBehaviour
             // Interpolate Volume
             mainThemeMusic.volume = Mathf.Lerp(startVolume, endVolume, time);
 
+
             // Interpolate Filter frequency
-            if(musicFilter != null)
-            {
-                musicFilter.cutoffFrequency = Mathf.Lerp(startFrequency, endFrequency, time);
-            }
+            float newFrequency = Mathf.Lerp(startFrequency, endFrequency, time);
+
+            if(mainFilter != null) mainFilter.cutoffFrequency = newFrequency;
+            if(bossFilter != null) bossFilter.cutoffFrequency = newFrequency;
+
             yield return null;
         }
         // Set exact final values
         mainThemeMusic.volume = endVolume;
-        if(musicFilter != null) musicFilter.cutoffFrequency = endFrequency;
+        if(mainFilter != null) mainFilter.cutoffFrequency = endFrequency;
+        if(bossFilter != null) bossFilter.cutoffFrequency = endFrequency;
     }
 
     // Crossfade between two songs
@@ -171,7 +173,9 @@ IEnumerator SwapMusic(AudioClip newMusicClip)
     {
         // Local references to swap them easily later
         AudioSource activeSource = mainThemeMusic;
-        AudioSource newSource = auxMusicSource;
+        AudioSource newSource = bossThemeMusic;
+        AudioLowPassFilter activeFilter = mainFilter;
+        AudioLowPassFilter newFilter = bossFilter;
 
         // Setup the new track
         newSource.clip = newMusicClip;
@@ -187,10 +191,8 @@ IEnumerator SwapMusic(AudioClip newMusicClip)
             newSource.volume = Mathf.Lerp(0, defaultVolume, timer);
 
             // Keep the filter open/clean during the transition
-            if(musicFilter != null)
-            {
-                musicFilter.cutoffFrequency = defaultFrequency;
-            }
+            if(mainFilter != null) mainFilter.cutoffFrequency = defaultFrequency;
+            if(bossFilter != null) bossFilter.cutoffFrequency = defaultFrequency;
 
             yield return null;
         }
@@ -202,6 +204,9 @@ IEnumerator SwapMusic(AudioClip newMusicClip)
 
         // Swap variable references
         mainThemeMusic = newSource;
-        auxMusicSource = activeSource;
+        bossThemeMusic = activeSource;
+
+        mainFilter = newFilter;
+        bossFilter = activeFilter;
     }
 }

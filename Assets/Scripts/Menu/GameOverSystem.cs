@@ -10,7 +10,7 @@ public class GameOverSystem : MonoBehaviour
     public float fadeSpeed = 2.0f;
 
     [Header("Audio Settings")]
-    public AudioSource backgroundMusic; //For background music
+    public AudioSource backgroundMusic; // The music that plays when losing
     public AudioSource soundEffect; //For UI sounds
     public AudioClip hoverSound;
     public AudioClip clickSound;
@@ -24,7 +24,11 @@ public class GameOverSystem : MonoBehaviour
         Time.timeScale = 1f;
 
         // Force loop just in case
-        if(backgroundMusic != null) backgroundMusic.loop = true;
+        if(backgroundMusic != null)
+        {
+            backgroundMusic.loop = true;
+            backgroundMusic.volume = 0; // Start silent for Fade In
+        }
 
         if(blackScreen != null)
         {
