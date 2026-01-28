@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MenuSystem : MonoBehaviour
 {
     [Header("Interface")]
+    public TextMeshProUGUI musicButtonText; // Reference to the music button text
     public CanvasGroup blackScreen;
     public float fadeSpeed = 2.0f;
 
@@ -17,9 +19,23 @@ public class MenuSystem : MonoBehaviour
 
     private float defaultVolume = 0.8f; // Use 0.8 as max volume to match the GameplaySystem and avoid clipping
     private bool isTransitioning = false; // Flag to prevent double actions during transitions
+    private bool isMusicOn; // We store the state here so both Awake and Start can use it.
+
+    void Awake()
+    {
+        // Load saved data: (1 = Music On / 0 = Music Off)
+        isMusicOn = PlayerPrefs.GetInt("MusicEnabled", 1) == 1;
+
+        // Apply silence immediately
+        // If Music is ON (true) -> Mute must be OFF (false)
+        if (backgroundMusic != null) backgroundMusic.mute = !isMusicOn;
+    }
 
     void Start()
     {
+        // Update the button text visually
+        UpdateMusicButtonText(isMusicOn);
+
         // Ensure game runs at normal speed
         Time.timeScale = 1f;
 
@@ -35,6 +51,32 @@ public class MenuSystem : MonoBehaviour
             blackScreen.alpha = 1; // Set screen to black initially
             blackScreen.blocksRaycasts = false; // Allow clicks to pass through
             StartCoroutine(FadeInSequence()); // Start fading in
+        }
+    }
+
+public void ToggleMusic()
+    {
+        // Invert the current state.
+        isMusicOn = !isMusicOn;
+
+        // Save new state (1 or 0).
+        PlayerPrefs.SetInt("MusicEnabled", isMusicOn ? 1 : 0);
+        PlayerPrefs.Save();
+
+        // Apply changes to Audio: Mute is the opposite of Music On.
+        if(backgroundMusic != null) backgroundMusic.mute = !isMusicOn;
+
+        // Update UI
+        UpdateMusicButtonText(isMusicOn);
+    }
+
+    void UpdateMusicButtonText(bool isOn)
+    {
+        if(musicButtonText != null)
+        {
+            // Update text based on state
+            // If isOn is true -> text is "ON". If false -> text is "OFF"
+            musicButtonText.text = isOn ? "MUSIC: ON" : "MUSIC: OFF";
         }
     }
 
@@ -149,4 +191,3 @@ public class MenuSystem : MonoBehaviour
         Application.Quit();
     }
 }
-

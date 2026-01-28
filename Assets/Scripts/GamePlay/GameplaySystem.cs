@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameplaySystem : MonoBehaviour
 {
     [Header("Visual Settings")]
+    public TextMeshProUGUI musicButtonText; // Reference to the music button text
     public CanvasGroup blackScreen;
     public float fadeSpeed = 2.0f;
 
@@ -20,9 +22,23 @@ public class GameplaySystem : MonoBehaviour
     private float defaultVolume = 0.8f; // I set this to 0.8 to avoid audio clipping when the filter is active
 
     private bool isTransitioning = false; // Flag to prevent double actions during transitions
+    private bool isMusicOn;
+
+    void Awake()
+    {
+        // Load saved data: (1 = Music On / 0 = Music Off)
+        isMusicOn = PlayerPrefs.GetInt("MusicEnabled", 1) == 1;
+
+        // Apply silence immediately to both sources
+        if (mainThemeMusic != null) mainThemeMusic.mute = !isMusicOn;
+        if (bossThemeMusic != null) bossThemeMusic.mute = !isMusicOn;
+    }
 
     void Start()
     {
+        // Update Visuals
+        UpdateMusicButtonText(isMusicOn);
+
         // Always make sure the game starts with clean audio
         if(mainFilter != null) mainFilter.cutoffFrequency = defaultFrequency;
         if(bossFilter != null) bossFilter.cutoffFrequency = defaultFrequency;
@@ -40,6 +56,32 @@ public class GameplaySystem : MonoBehaviour
             blackScreen.alpha = 1; // Start with black screen
             blackScreen.blocksRaycasts = false; // Allow clicks to pass through
             StartCoroutine(FadeInSequence()); // Start fading in
+        }
+    }
+
+    public void ToggleMusic()
+    {
+        // Invert state
+        isMusicOn = !isMusicOn;
+
+        // Save
+        PlayerPrefs.SetInt("MusicEnabled", isMusicOn ? 1 : 0);
+        PlayerPrefs.Save();
+
+        // Apply to both channels
+        if(mainThemeMusic != null) mainThemeMusic.mute = !isMusicOn;
+        if(bossThemeMusic != null) bossThemeMusic.mute = !isMusicOn;
+
+        // Update UI
+        UpdateMusicButtonText(isMusicOn);
+    }
+
+    void UpdateMusicButtonText(bool isOn)
+    {
+        // Update text based on state
+        if(musicButtonText != null)
+        {
+            musicButtonText.text = isOn ? "MUSIC: ON" : "MUSIC: OFF";
         }
     }
 
