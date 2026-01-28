@@ -15,6 +15,7 @@ public class GameOverSystem : MonoBehaviour
     public AudioClip hoverSound;
     public AudioClip clickSound;
 
+    private float defaultVolume = 0.8f; // Safety limit for volume (0.8 matches the rest of the game)
     private bool isTransitioning = false; // Flag to prevent double actions during transitions
 
     void Start()
@@ -68,8 +69,11 @@ public class GameOverSystem : MonoBehaviour
             timer -= Time.deltaTime * fadeSpeed;
             blackScreen.alpha = timer;
 
-            // Volume goes up as Alpha goes down
-            if(backgroundMusic != null) backgroundMusic.volume = 1 - timer;
+            // Fade in music to 0.8
+            if(backgroundMusic != null)
+            {
+                backgroundMusic.volume = Mathf.Lerp(defaultVolume, 0, timer);
+            }
 
             yield return null; // Wait for next frame
         }
@@ -77,7 +81,8 @@ public class GameOverSystem : MonoBehaviour
         blackScreen.alpha = 0; // Ensure alpha is exactly 0
         blackScreen.blocksRaycasts = false;
 
-        if(backgroundMusic != null) backgroundMusic.volume = 1f; // Max volume
+        // Ensure the final volume is set correctly
+        if(backgroundMusic != null) backgroundMusic.volume = defaultVolume;
     }
 
     IEnumerator FadeOutSequence()
@@ -92,8 +97,11 @@ public class GameOverSystem : MonoBehaviour
             timer += Time.deltaTime * fadeSpeed;
             blackScreen.alpha = timer;
 
-            // Volume goes down as Alpha goes up
-            if(backgroundMusic != null) backgroundMusic.volume = 1 - timer;
+            // Fade out music
+            if(backgroundMusic != null)
+            {
+                backgroundMusic.volume = Mathf.Lerp(defaultVolume, 0, timer);
+            }
 
             yield return null;
         }

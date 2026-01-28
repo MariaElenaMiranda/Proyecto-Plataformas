@@ -15,6 +15,7 @@ public class MenuSystem : MonoBehaviour
     public AudioClip hoverSound;
     public AudioClip clickSound;
 
+    private float defaultVolume = 0.8f; // Use 0.8 as max volume to match the GameplaySystem and avoid clipping
     private bool isTransitioning = false; // Flag to prevent double actions during transitions
 
     void Start()
@@ -72,16 +73,20 @@ public class MenuSystem : MonoBehaviour
             timer -= Time.deltaTime * fadeSpeed;
             blackScreen.alpha = timer;
 
-            // Volume goes up as Alpha goes down
-            if(backgroundMusic != null) backgroundMusic.volume = 1 - timer;
+            // Fade in music smoothly respecting the 0.8 limit
+            if(backgroundMusic != null)
+            {
+                // Lerp from 0 to 0.8 based on the timer
+                backgroundMusic.volume = Mathf.Lerp(defaultVolume, 0, timer);
+            }
 
-            yield return null; // Wait for next frame
+            yield return null;
         }
 
         blackScreen.alpha = 0; // Ensure alpha is exactly 0
         blackScreen.blocksRaycasts = false;
 
-        if(backgroundMusic != null) backgroundMusic.volume = 1f; // Max volume
+        if(backgroundMusic != null) backgroundMusic.volume = defaultVolume; // Max volume
     }
 
     IEnumerator FadeOutSequence()
@@ -96,8 +101,12 @@ public class MenuSystem : MonoBehaviour
             timer += Time.deltaTime * fadeSpeed;
             blackScreen.alpha = timer;
 
-             // Volume goes down as Alpha goes up
-            if(backgroundMusic != null) backgroundMusic.volume = 1 - timer;
+            // Fade out music smoothly
+            if(backgroundMusic != null)
+            {
+                // Lerp from 0.8 to 0
+                backgroundMusic.volume = Mathf.Lerp(defaultVolume, 0, timer);
+            }
 
             yield return null;
         }

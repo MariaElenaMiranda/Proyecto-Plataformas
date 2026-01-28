@@ -248,8 +248,7 @@ Transform:
   m_LocalPosition: {x: 265.25, y: 149, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2037731779}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &963932002
@@ -472,7 +471,7 @@ PrefabInstance:
     - target: {fileID: 321271637788183999, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 963932002}
+      objectReference: {fileID: 0}
     - target: {fileID: 321271637788183999, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: PlayHoverSound
@@ -488,7 +487,7 @@ PrefabInstance:
     - target: {fileID: 992866569635979719, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 963932002}
+      objectReference: {fileID: 0}
     - target: {fileID: 992866569635979719, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Exit
@@ -496,7 +495,7 @@ PrefabInstance:
     - target: {fileID: 1937113477819273464, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 963932002}
+      objectReference: {fileID: 0}
     - target: {fileID: 1937113477819273464, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: PlayHoverSound
@@ -588,7 +587,7 @@ PrefabInstance:
     - target: {fileID: 5173986836218584301, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 963932002}
+      objectReference: {fileID: 0}
     - target: {fileID: 5173986836218584301, guid: 7ab67d656c6544ac39143f333f7836f7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Play
@@ -728,12 +727,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2037731778}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 265.25, y: 149, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 963932001}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &2037731780
 AudioSource:
@@ -942,3 +941,4 @@ SceneRoots:
   - {fileID: 2062401699}
   - {fileID: 1367934134}
   - {fileID: 963932001}
+  - {fileID: 2037731779}
