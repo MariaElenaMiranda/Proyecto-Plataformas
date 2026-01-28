@@ -6548,7 +6548,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 713e3942ae5f84133bbd1cba9690112f, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 91613b2cbfb14473eb72e3ed4cc44f13, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -11404,7 +11404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b205bf53314764f4184eee708d6a1545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicBoss: {fileID: 8300000, guid: d3697bd2b64db4ab19cad4c77a4c66fa, type: 3}
+  musicBoss: {fileID: 8300000, guid: 4cc3aca8eea9b47d985f5afd23b2a877, type: 3}
   gameplaySystem: {fileID: 487340168}
 --- !u!61 &1761272950
 BoxCollider2D:
@@ -13073,7 +13073,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 4cc3aca8eea9b47d985f5afd23b2a877, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0
   m_Pitch: 1
