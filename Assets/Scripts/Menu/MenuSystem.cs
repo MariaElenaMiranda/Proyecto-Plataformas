@@ -9,30 +9,40 @@ public class MenuSystem : MonoBehaviour
     public CanvasGroup blackScreen;
     public float fadeSpeed = 2.0f;
 
-    [Header("Sounds")]
-    public AudioSource soundEffect;
+    [Header("Audio Settings")]
+    public AudioSource backgroundMusic; // For background music
+    public AudioSource soundEffect; // For UI sounds
     public AudioClip hoverSound;
     public AudioClip clickSound;
 
+    private float defaultVolume = 0.8f; // Use 0.8 as max volume to match the GameplaySystem and avoid clipping
     private bool isTransitioning = false; // Flag to prevent double actions during transitions
 
     void Start()
     {
+        // Ensure game runs at normal speed
+        Time.timeScale = 1f;
+
+        // Force loop just in case
+        if(backgroundMusic != null)
+        {
+            backgroundMusic.loop = true;
+            backgroundMusic.volume = 0; // Start silent for Fade In
+        }
+
         if(blackScreen != null)
         {
             blackScreen.alpha = 1; // Set screen to black initially
             blackScreen.blocksRaycasts = false; // Allow clicks to pass through
             StartCoroutine(FadeInSequence()); // Start fading in
         }
-        // Ensure game runs at normal speed
-        Time.timeScale = 1f;
     }
 
     //Play Button
     public void Play()
     {
         // Check if we are already changing scenes
-        if(!isTransitioning) StartCoroutine(ChangeSceneSequence("Map"));
+        if(!isTransitioning) StartCoroutine(ChangeSceneSequence("MapTest"));
     }
 
 
@@ -58,17 +68,30 @@ public class MenuSystem : MonoBehaviour
 
     IEnumerator FadeInSequence()
     {
+        // Ensure music starts playing
+        if(backgroundMusic != null && !backgroundMusic.isPlaying) backgroundMusic.Play();
+
         float timer = 1;
         while(timer > 0)
         {
             // Reduces alpha from 1 (black) to 0 (transparent)
             timer -= Time.deltaTime * fadeSpeed;
             blackScreen.alpha = timer;
-            yield return null; // Wait for next frame
+
+            // Fade in music smoothly respecting the 0.8 limit
+            if(backgroundMusic != null)
+            {
+                // Lerp from 0 to 0.8 based on the timer
+                backgroundMusic.volume = Mathf.Lerp(defaultVolume, 0, timer);
+            }
+
+            yield return null;
         }
 
         blackScreen.alpha = 0; // Ensure alpha is exactly 0
         blackScreen.blocksRaycasts = false;
+
+        if(backgroundMusic != null) backgroundMusic.volume = defaultVolume; // Max volume
     }
 
     IEnumerator FadeOutSequence()
@@ -82,8 +105,17 @@ public class MenuSystem : MonoBehaviour
             // Increases alpha from 0 (transparent) to 1 (black)
             timer += Time.deltaTime * fadeSpeed;
             blackScreen.alpha = timer;
+
+            // Fade out music smoothly
+            if(backgroundMusic != null)
+            {
+                // Lerp from 0.8 to 0
+                backgroundMusic.volume = Mathf.Lerp(defaultVolume, 0, timer);
+            }
+
             yield return null;
         }
+        if(backgroundMusic != null) backgroundMusic.volume = 0f; // Silence
     }
 
     IEnumerator ChangeSceneSequence(string sceneName)
@@ -105,15 +137,13 @@ public class MenuSystem : MonoBehaviour
         // Ensure time runs (consistency with PauseSystem)
         Time.timeScale = 1f;
 
+        // Play the click sound immediately
         if(clickSound != null && soundEffect != null)
         {
             soundEffect.PlayOneShot(clickSound);
-            // Wait exactly the length of the audio
-            yield return new WaitForSeconds(clickSound.length);
-        }else
-        {
-            yield return new WaitForSeconds(0.5f); // Default wait if no sound
         }
+        // This ensures the screen turns black and music fades out smoothly before quitting.
+        yield return StartCoroutine(FadeOutSequence()); // Wait for FadeOut to finish
 
         Debug.Log("Exiting game...");
         Application.Quit();
