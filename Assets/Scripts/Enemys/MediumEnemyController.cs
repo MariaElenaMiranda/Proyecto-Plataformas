@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MediumEnemyController : MonoBehaviour
 {
@@ -37,6 +38,11 @@ public class MediumEnemyController : MonoBehaviour
     private bool takeDamage = false;
     
     public Transform groundCheck;
+    public Transform groundCheckBehind;
+    private bool frontGrounded;
+    private bool backGrounded;
+    private bool hasAnyGround;
+
     public float groundCheckDistance = 0.5f;
     public LayerMask groundLayer;
 
@@ -61,10 +67,11 @@ public class MediumEnemyController : MonoBehaviour
 
         UpdateGroundedState();
         UpdateFallState();
+
         animator.SetBool("isDead", isDead);
         animator.SetBool("isAttacking", isAttacking);
         
-        animator.SetBool("isGrounded", isGrounded);
+        animator.SetBool("isGrounded", hasAnyGround);
         animator.SetFloat("verticalSpeed", rb.velocity.y);
         animator.SetFloat("speed", Mathf.Abs(movementX));
 
@@ -74,12 +81,28 @@ public class MediumEnemyController : MonoBehaviour
     private void Movement() {
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        if (distanceToPlayer <= attackRadius)
+        if (hasAnyGround && !isGrounded)
+        {
+            float facing = Mathf.Sign(transform.localScale.x);
+
+            if (frontGrounded && !backGrounded)
+            {
+                movementX = -facing;
+                return;
+            }
+            else if (backGrounded && !frontGrounded)
+            {
+                movementX = facing;
+                return;
+            }
+        }
+
+        if (distanceToPlayer < attackRadius)
         {
             Attack();
             return;
         }
-        else if (distanceToPlayer < detectionRadius)
+        else if (distanceToPlayer < detectionRadius && distanceToPlayer > attackRadius)
         {
             Vector2 direction = (player.position - transform.position).normalized;
 
@@ -95,9 +118,6 @@ public class MediumEnemyController : MonoBehaviour
             if (isGrounded && playerAlive && !isDead)
             {
                 movementX = direction.x;
-
-              
-
             }
             else
             {
@@ -154,25 +174,26 @@ public class MediumEnemyController : MonoBehaviour
             rb.velocity = Vector2.zero;
             return;
         }
-        if (!takeDamage) { 
+        if (!takeDamage && hasAnyGround) { 
             rb.velocity = new Vector2(movementX * moveSpeed, rb.velocity.y);
    
         }
     }
 
+
     private void UpdateGroundedState()
     {
         wasGrounded = isGrounded;
-        RaycastHit2D hit = Physics2D.Raycast(
-            groundCheck.position,
-            Vector2.down,
-            groundCheckDistance,
-            groundLayer
-        );
+        RaycastHit2D hitFront = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
+        RaycastHit2D hitBack = Physics2D.Raycast(groundCheckBehind.position, Vector2.down, groundCheckDistance, groundLayer);
 
-        isGrounded = hit.collider != null;
+        frontGrounded = hitFront.collider != null;
+        backGrounded = hitBack.collider != null;
 
-        if(!wasGrounded && isGrounded)
+        hasAnyGround = frontGrounded || backGrounded;
+        isGrounded = frontGrounded && backGrounded;
+
+        if (!wasGrounded && isGrounded)
         {
 
             animator.SetTrigger("land");
@@ -208,6 +229,12 @@ public class MediumEnemyController : MonoBehaviour
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckDistance);
         }
+        if (groundCheckBehind != null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(groundCheckBehind.position, groundCheckBehind.position + Vector3.down * groundCheckDistance);
+        }
+
     }
 
     public void Attack() {
