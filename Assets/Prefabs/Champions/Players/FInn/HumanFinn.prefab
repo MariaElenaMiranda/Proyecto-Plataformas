@@ -184,20 +184,20 @@ MonoBehaviour:
   jumpForce: 5
   reboundForce: 5
   mana: 100
-  manaRegenPorcent: 5
+  manaRegenPercent: 15
   maxMana: 100
   live: 100
-  liveRegenPorcent: 5
+  liveRegenPorcent: 15
   maxLive: 100
   lengthRay: 0.55
   fallMultiplier: 2.5
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   isDead: 0
   attackDamage: 10
   smoothTime: 0.1
-  animator: {fileID: 8370957822932348442}
+  animator: {fileID: 0}
 --- !u!50 &6962932830473538357
 Rigidbody2D:
   serializedVersion: 4

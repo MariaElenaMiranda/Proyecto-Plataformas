@@ -179,11 +179,11 @@ MonoBehaviour:
   reboundForce: 5
   live: 30
   attackDamage: 5
-  groundCheck: {fileID: 778186435511218153}
+  groundCheck: {fileID: 0}
   groundCheckDistance: 0.5
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
 --- !u!95 &1447197428599818689
 Animator:
   serializedVersion: 5

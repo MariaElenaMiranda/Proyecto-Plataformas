@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerTest : MonoBehaviour
 {
 
-    public float moveSpeed = 5f;
+    public float moveSpeed = 4f;
     public float moveSprint => moveSpeed * 2f;
     public float playerMovement;
     public bool sprint = false;
@@ -12,14 +12,14 @@ public class PlayerTest : MonoBehaviour
     public float reboundForce = 5f;
 
     public float mana = 100f;
-    public float manaRegenPercent = 5f;
+    public float manaRegenPercent = 75f;
     public float maxMana = 100f;
 
     public float live = 100f;
-    public float liveRegenPorcent = 5f;
+    public float liveRegenPercent = 50f;
     public float maxLive = 100f;
 
-    public float lengthRay = 0.1f;
+    public float lengthRay = 0.55f;
 
 
     public float fallMultiplier = 2.5f;
@@ -49,7 +49,6 @@ public class PlayerTest : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         defaultGravity = rb.gravityScale;
-        originalDamage = attackDamage;
     }
 
     void Update()
@@ -157,7 +156,7 @@ public class PlayerTest : MonoBehaviour
     {
         if (!isAttacking && live < maxLive && !takeDamage && !isDead)
         {
-            live += (liveRegenPorcent / 100) * Time.deltaTime;
+            live += (liveRegenPercent / 100) * Time.deltaTime;
             if (live > maxLive)
             {
                 live = maxLive;
@@ -194,7 +193,7 @@ public class PlayerTest : MonoBehaviour
 
     public void Attack()
     {
-
+        originalDamage = attackDamage;
         if (mana >= 15)
         {
             if (sprint)
@@ -205,7 +204,6 @@ public class PlayerTest : MonoBehaviour
             }
             else
             {
-
                 isAttacking = true;
                 mana -= 5f;
             }
@@ -243,7 +241,7 @@ public class PlayerTest : MonoBehaviour
 
     public void IncreaseLifeRegen(float percent)
     {
-        this.liveRegenPorcent += this.liveRegenPorcent * percent;
+        this.liveRegenPercent += this.liveRegenPercent * percent;
     }
     public void IncreaseManaRegen(float percent)
     {

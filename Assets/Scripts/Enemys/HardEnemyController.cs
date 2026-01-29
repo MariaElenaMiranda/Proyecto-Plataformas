@@ -27,14 +27,14 @@ public class HardEnemyController : MonoBehaviour
     private bool isAttacking;
     private float nextAttackTime = 0f;
     public float meleeAttackDamage = 2f;
-    public float attackDamage = 10f;
+    public float attackDamage = 7.5f;
 
     public float attackMoveSpeed = 10.0f;
     
     public float dashDuration = 0.8f;
     public float attackDelay = 3f;
 
-    public float live = 50f;
+    public float live = 40f;
     public float minFallSpeed = 10f;
     public float fallDamageMultiplier = 1.5f;
     private float maxFallSpeed;
@@ -48,7 +48,7 @@ public class HardEnemyController : MonoBehaviour
     public float groundCheckDistance = 0.5f;
     public LayerMask groundLayer;
 
-    public float obstacleCheckRadius = 1.5f;                
+    public float obstacleCheckRadius = 1.5f;
     public float jumpForce = 5f;
     public float jumpDistance = 1.0f;
     public float jumpCooldown = 0.5f;
