@@ -6,10 +6,10 @@ public class PowerUpRandomizer : MonoBehaviour
 
     void Start()
     {
-        GenerarPowerup();
+        GeneratePowerup();
     }
 
-    void GenerarPowerup()
+    void GeneratePowerup()
     {
         if (powerupsList.Length > 0)
         {

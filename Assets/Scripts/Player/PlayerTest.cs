@@ -62,7 +62,8 @@ public class PlayerTest : MonoBehaviour
             RegenerateLive();
             Jump();
 
-            if (Input.GetKey(KeyCode.F) && !isAttacking ) {
+            if (Input.GetKey(KeyCode.F) && !isAttacking)
+            {
                 Attack();
             }
 
@@ -86,17 +87,17 @@ public class PlayerTest : MonoBehaviour
             else sprint = false;
 
             if (sprint) playerMovement = moveSprint;
-               else playerMovement = moveSpeed;
+            else playerMovement = moveSpeed;
 
             float fullSpeed = moveInput * playerMovement;
-                float SmoothSpeed = Mathf.SmoothDamp(
-                    rb.velocity.x,
-                    fullSpeed,
-                    ref smoothSpeed,
-                    smoothTime
-                );
+            float SmoothSpeed = Mathf.SmoothDamp(
+                rb.velocity.x,
+                fullSpeed,
+                ref smoothSpeed,
+                smoothTime
+            );
 
-                rb.velocity = new Vector2(SmoothSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(SmoothSpeed, rb.velocity.y);
 
             if (sprint)
             {
@@ -119,31 +120,32 @@ public class PlayerTest : MonoBehaviour
 
 
     }
-    private void Jump() {
+    private void Jump()
+    {
         isGrounded = Mathf.Abs(rb.velocity.y) < 0.01f;
 
         if (isGrounded) canDoubleJump = true;
 
-         if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump"))
+        {
+            if (isGrounded)
             {
-             if (isGrounded)
-             {
-                 rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-             }
-             else if (canDoubleJump)
-             {
-                rb.gravityScale = defaultGravity; 
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            }
+            else if (canDoubleJump)
+            {
+                rb.gravityScale = defaultGravity;
                 rb.velocity = new Vector2(rb.velocity.x, doubleJumpForce);
                 canDoubleJump = false;
-             }
-         }
+            }
+        }
     }
 
     private void RegenerateMana()
     {
-        if(!isAttacking && mana < maxMana && !takeDamage)
+        if (!isAttacking && mana < maxMana && !takeDamage)
         {
-            mana += (manaRegenPercent/100) * Time.deltaTime;
+            mana += (manaRegenPercent / 100) * Time.deltaTime;
             if (mana > maxMana)
             {
                 mana = maxMana;
@@ -163,13 +165,14 @@ public class PlayerTest : MonoBehaviour
         }
     }
 
-    public void TakeDamage(Vector2 direction , float amountDamage) {
+    public void TakeDamage(Vector2 direction, float amountDamage)
+    {
         if (!takeDamage)
         {
             takeDamage = true;
             live -= amountDamage;
 
-            if(live <= 0)
+            if (live <= 0)
             {
                 live = 0;
                 isDead = true;
@@ -183,7 +186,8 @@ public class PlayerTest : MonoBehaviour
         }
     }
 
-    public void DisableDamage() {
+    public void DisableDamage()
+    {
         takeDamage = false;
         rb.velocity = Vector2.zero;
     }
@@ -191,15 +195,17 @@ public class PlayerTest : MonoBehaviour
     public void Attack()
     {
 
-        if (mana >= 15) {
+        if (mana >= 15)
+        {
             if (sprint)
             {
                 isAttacking = true;
                 mana -= 15f;
                 attackDamage = attackDamage * 2;
             }
-            else { 
-            
+            else
+            {
+
                 isAttacking = true;
                 mana -= 5f;
             }
@@ -213,7 +219,8 @@ public class PlayerTest : MonoBehaviour
         attackDamage = originalDamage;
     }
 
-    private void Gravity() {
+    private void Gravity()
+    {
         if (rb.velocity.y <= 0)
         {
             rb.gravityScale = defaultGravity * fallMultiplier;

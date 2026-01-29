@@ -177,8 +177,8 @@ MonoBehaviour:
   detectionRadius: 5
   moveSpeed: 2
   reboundForce: 5
-  live: 20
-  attackDamage: 10
+  live: 30
+  attackDamage: 5
   groundCheck: {fileID: 778186435511218153}
   groundCheckDistance: 0.5
   groundLayer:

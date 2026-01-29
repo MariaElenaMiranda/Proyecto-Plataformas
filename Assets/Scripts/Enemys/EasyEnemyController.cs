@@ -17,12 +17,12 @@ public class EasyEnemyController : MonoBehaviour
 
     private bool isMoving;
 
-    public float live = 20f;
+    public float live = 30f;
     private bool isDead;
 
     private Animator animator;
     private bool takeDamage = false;
-    public float attackDamage = 10f;
+    public float attackDamage = 5f;
 
     public Transform groundCheck;
     public float groundCheckDistance = 0.5f;
