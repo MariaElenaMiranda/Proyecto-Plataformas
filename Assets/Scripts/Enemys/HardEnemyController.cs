@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using static System.Net.WebRequestMethods;
 
@@ -22,23 +23,18 @@ public class HardEnemyController : MonoBehaviour
     private bool wasGrounded;
     private bool frontGrounded;
     private bool backGrounded;
-    private bool isFalling;
     
-
     private bool isAttacking;
     private float nextAttackTime = 0f;
     public float meleeAttackDamage = 2f;
     public float attackDamage = 10f;
 
-
-    
     public float attackMoveSpeed = 10.0f;
     
     public float dashDuration = 0.8f;
     public float attackDelay = 3f;
 
-
-    public float live = 20f;
+    public float live = 50f;
     public float minFallSpeed = 10f;
     public float fallDamageMultiplier = 1.5f;
     private float maxFallSpeed;
@@ -52,8 +48,7 @@ public class HardEnemyController : MonoBehaviour
     public float groundCheckDistance = 0.5f;
     public LayerMask groundLayer;
 
-    public float obstacleCheckRadius = 1.5f; 
-    public int raysCount = 5;                
+    public float obstacleCheckRadius = 1.5f;                
     public float jumpForce = 5f;
     public float jumpDistance = 1.0f;
     public float jumpCooldown = 0.5f;
@@ -63,15 +58,18 @@ public class HardEnemyController : MonoBehaviour
     public float wallJumpHorizontalDistance = 3f;
     public float wallJumpHeight = 3.5f;
     public float wallJumpTime = 0.5f;
-
-
+    public float maxJumpVelocityX = 6f;
+    public float maxJumpVelocityY = 9f;
+    private Vector2 targetPosition;
+    private Vector2 delta ;
+    private float jumpTime;
+    private float vx;
+    private float vy;
     private bool canJumpToWall;
-
     private bool canJumpToPlayer;
 
-
-    private bool nextTouWall;
     private bool playerAlive;
+
 
 
     // Start is called before the first frame update
@@ -86,22 +84,22 @@ public class HardEnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerAlive && !isDead)
-        {
-            
-            UpdateGroundedState();
-            
-            UpdateObstacleState();
-            Movement();
-            //UpdateFallState();
+        animator.SetBool("isDead", isDead);
+        animator.SetBool("isAttacking", isAttacking);
+        animator.SetBool("hasGround", hasAnyGround);
+        animator.SetBool("isGrounded", isGrounded);
+        animator.SetFloat("verticalSpeed", rb.velocity.y);
+        animator.SetFloat("speed", Mathf.Abs(rb.velocity.x));
+        
+        if (isAttacking || !playerAlive || isDead) return;
+   
+        UpdateGroundedState();
+        UpdateObstacleState();
+        Movement();
+        UpdateFallState();
 
-            //animator.SetBool("isDead", isDead);
-            //animator.SetBool("isAttacking", isAttacking);
-            animator.SetBool("hasGround", hasAnyGround);
-            animator.SetBool("isGrounded", isGrounded);
-            animator.SetFloat("verticalSpeed", rb.velocity.y);
-            animator.SetFloat("speed", Mathf.Abs(rb.velocity.x)); 
-        }
+            
+        
 
     }       
 
@@ -111,16 +109,14 @@ public class HardEnemyController : MonoBehaviour
         float horizontalDistance = Mathf.Abs(player.position.x - transform.position.x);
         
 
-        
-       if (distanceToPlayer < detectionRadius)
+        if (distanceToPlayer < detectionRadius)
 
         {
-            if (hasAnyGround && !isGrounded && player.position.y < transform.position.y )
+            LookUpdate();
+            if (hasAnyGround && !isGrounded && player.position.y < transform.position.y)
             {
-
+                Debug.Log("fall to Player");
                 float facing = Mathf.Sign(transform.localScale.x);
-
-                lookUpdate();
 
                 if (playerAlive && !isDead)
                 {
@@ -138,8 +134,9 @@ public class HardEnemyController : MonoBehaviour
                     }
                 }
             }
-            else if(hasAnyGround && !isGrounded && player.position.y >= transform.position.y)
-            { 
+            else if(hasAnyGround && !isGrounded && player.position.y >= transform.position.y )
+            {
+                Debug.Log("acomodares");
                 float facing = Mathf.Sign(transform.localScale.x);
 
                 if (frontGrounded && !backGrounded)
@@ -152,17 +149,22 @@ public class HardEnemyController : MonoBehaviour
                     movementX = facing;
                     return;
                 }
-            }else if (isGrounded)
+            }
+            
+            else if (isGrounded)
             {
-                lookUpdate();
+                
+
+                
+
 
                 if (playerAlive && !isDead)
                 {
-
-                    if (horizontalDistance > 0.2f)
+                    Debug.Log("move to Player" + isAttacking);
+                    if (horizontalDistance > 0.2f )
                     {
                         movementX = Mathf.Sign(player.position.x - transform.position.x);
-                        
+
                     }
                     else
                     {
@@ -171,6 +173,14 @@ public class HardEnemyController : MonoBehaviour
                     }
                 }
 
+                if(distanceToPlayer < attackRadius && hitWall.collider == null && hitWall.collider == null && player.position.y <= transform.position.y+0.5f)
+                {
+                    Debug.Log("Atacando" );
+                    Attack();
+                    return;
+                }
+
+
                 if (canJumpToWall )
                 {
                     Debug.Log("Jump to WALL" + canJumpToPlayer);
@@ -178,28 +188,21 @@ public class HardEnemyController : MonoBehaviour
                     return;
                 }
 
-                if (canJumpToPlayer && player.position.y > transform.position.y + 1f)
+                if (canJumpToPlayer && player.position.y > transform.position.y + 1f  && distanceToPlayer < obstacleCheckRadius)
                 {
                     Debug.Log("Jump to PLAYER");
                     JumpToPlayer();
+                    return;
                 }
             }
-            
-
-
-            //CheckObstacles();
         }
         else
         {
+            Debug.Log("Idle");
             movementX = 0;
         }
-
-        //if (distanceToPlayer <= attackRadius && !isAttacking)
-        //{
-            
-        //}
     }
-    private void lookUpdate() {
+    private void LookUpdate() {
 
         Vector2 direction = (player.position - transform.position).normalized;
         if (direction.x < 0)
@@ -240,48 +243,53 @@ public class HardEnemyController : MonoBehaviour
         }
     }
 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.CompareTag("sword"))
-    //    {
-    //        Vector2 damageDirection = new Vector2(collision.gameObject.transform.position.x, 0);
-    //        PlayerTest player = collision.GetComponentInParent<PlayerTest>();
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("sword"))
+        {
+            Vector2 damageDirection = new Vector2(collision.gameObject.transform.position.x, 0);
+            PlayerTest player = collision.GetComponentInParent<PlayerTest>();
 
-    //        TakeDamage(damageDirection, player.attackDamage);
+            TakeDamage(damageDirection, player.attackDamage);
 
-    //    }
-    //}
+        }
+    }
 
     private void FixedUpdate()
     {
+        Debug.Log(playerAlive);
         if (isDead || !playerAlive)
         {
-            rb.velocity = Vector2.zero;
+            
+            rb.velocity = new Vector2(0f,rb.velocity.y);
+            movementX = 0;
             return;
         }
-        if (hasAnyGround) {
+        if (hasAnyGround && !takeDamage) {
         
             rb.velocity = new Vector2(movementX * moveSpeed, rb.velocity.y);
         }
-        //|| player.position.y < transform.position.y - 0.3f
+        
     }
     private void JumpToObstacle()
     {
-        if (Time.time < nextJumpTime || !isGrounded || !canJumpToWall) return;
+        if (Time.time < nextJumpTime || !isGrounded || !canJumpToWall || isAttacking) return;
 
         float jumpDir = -directionX;
-        Vector2 targetPosition = new Vector2(
+        targetPosition = new Vector2(
             transform.position.x + jumpDir * wallJumpHorizontalDistance,
             transform.position.y + wallJumpHeight
         );
 
         Debug.DrawLine(transform.position, targetPosition, Color.yellow, 1f);
 
-        Vector2 delta = targetPosition - (Vector2)transform.position;
+        delta = targetPosition - (Vector2)transform.position;
 
-        float vx = delta.x / wallJumpTime;
-        float vy = (delta.y - 0.5f * Physics2D.gravity.y * wallJumpTime * wallJumpTime) / wallJumpTime;
-
+        vx = delta.x / wallJumpTime;
+        vy = (delta.y - 0.5f * Physics2D.gravity.y * wallJumpTime * wallJumpTime) / wallJumpTime;
+        movementX = vx;
+        vx = Mathf.Clamp(vx, -maxJumpVelocityX, maxJumpVelocityX);
+        vy = Mathf.Clamp(vy, 0f, maxJumpVelocityY);
         rb.velocity = new Vector2(vx, vy);
 
         isGrounded = false;
@@ -290,18 +298,21 @@ public class HardEnemyController : MonoBehaviour
 
     private void JumpToPlayer()
     {
-        // Revisamos cooldown y que esté en el suelo
-        if (Time.time < nextJumpTime || !isGrounded || !canJumpToPlayer) return;
+        
+        if (Time.time < nextJumpTime || !isGrounded || !canJumpToPlayer || isAttacking) return;
 
-        Vector2 targetPosition = player.position;
+        targetPosition = player.position;
         Debug.DrawLine(transform.position, targetPosition, Color.green, 1f);
 
-        Vector2 delta = targetPosition - (Vector2)transform.position;
-        float jumpTime = 0.5f; 
-        float vx = delta.x / jumpTime;
-        float vy = (delta.y - 0.5f * Physics2D.gravity.y * jumpTime * jumpTime) / jumpTime;
+        float distance = delta.magnitude;
+        float timeScale = Mathf.Clamp(distance / 5f, 0.8f, 1.2f);
+        jumpTime *= timeScale;
+       
+        vx = delta.x / jumpTime;
+        vy = (delta.y - 0.5f * Physics2D.gravity.y * jumpTime * jumpTime) / jumpTime;
+        vx = Mathf.Clamp(vx, -maxJumpVelocityX, maxJumpVelocityX);
+        vy = Mathf.Clamp(vy, 0f, maxJumpVelocityY);
         movementX = vx;
-        
         rb.velocity = new Vector2(vx, vy);
 
         isGrounded = false;
@@ -318,10 +329,12 @@ public class HardEnemyController : MonoBehaviour
         frontGrounded = hitFront.collider != null;
         backGrounded = hitBack.collider != null;
 
+       
+
         hasAnyGround = frontGrounded || backGrounded;
         isGrounded = frontGrounded && backGrounded;
 
-
+        
         if (!wasGrounded && hasAnyGround )
         {
             animator.SetTrigger("land");
@@ -329,10 +342,18 @@ public class HardEnemyController : MonoBehaviour
             maxFallSpeed = 0f;
             
         }
-    }
+       
 
+
+    }
+  
     private void UpdateObstacleState()
     {
+        if (!isGrounded) { 
+            canJumpToWall = false;
+            canJumpToPlayer = false;
+            return;
+        }
         Vector2 rayOrigin = new Vector2(transform.position.x, transform.position.y + 0.5f);
         float wallDir = Mathf.Sign(movementX);
         if (wallDir == 0) wallDir = Mathf.Sign(player.position.x - transform.position.x);
@@ -347,8 +368,17 @@ public class HardEnemyController : MonoBehaviour
         canJumpToWall = wallCloseEnough && hitUp.collider == null;
         canJumpToPlayer = hitUp.collider == null && !canJumpToWall;
 
-        //// Logs para depuración
-        //Debug.Log($"Wall: {hitWall.collider}, canJumpToWall: {canJumpToWall}, canJumpToPlayer: {canJumpToPlayer}");
+    
+    }
+
+    private void UpdateFallState()
+    {
+        if (!hasAnyGround && rb.velocity.y < -0.1f)
+        {
+
+            maxFallSpeed = Mathf.Max(maxFallSpeed, Mathf.Abs(rb.velocity.y));
+        }
+
     }
 
     private void ApplyFallDamage()
@@ -365,64 +395,73 @@ public class HardEnemyController : MonoBehaviour
 
     }
 
+    public void Attack()
+    {
+        if (isAttacking ||!isGrounded ||Time.time < nextAttackTime ||takeDamage ||!playerAlive) return;
 
+        isAttacking = true;
+        movementX = Mathf.Sign(player.position.x - transform.position.x);
 
-    //private void UpdateFallState()
-    //{
-    //    if (!isGrounded && rb.velocity.y < -0.1f)
-    //    {
-    //        isFalling = true;
-    //        maxFallSpeed = Mathf.Max(maxFallSpeed, Mathf.Abs(rb.velocity.y));
-    //    }
-    //    else
-    //    {
-    //        isFalling = false;
-    //    }
-    //}
+        animator.SetTrigger("attack");
+        StartCoroutine(PerformAttack());
 
-    //private void CheckObstacles() {
+        nextAttackTime = Time.time + attackDelay;
+    }
 
-    //    float hits = 0;
+    public void TakeDamage(Vector2 direction, float amountDamage)
+    {
+        if (!takeDamage && !isAttacking)
+        {
+            takeDamage = true;
+            animator.SetTrigger("hit");
+            live -= amountDamage;
+            if (live <= 0)
+            {
+                isDead = true;
+                isAttacking = false;
+                rb.velocity = new Vector2(0, rb.velocity.y);
+            }
+            else
+            {
+                Vector2 rebound = new Vector2(transform.position.x - direction.x, 1).normalized;
+                rb.velocity = Vector2.zero;
+                rb.AddForce(rebound * reboundForce, ForceMode2D.Impulse);
+                StartCoroutine(DisableDamage());
+            }
+        }
+    }
 
-    //    if (!isGrounded || isDead || !playerAlive ||Time.time < nextJumpTime || isFalling) { 
-    //        return;
-    //    }
+    IEnumerator DisableDamage()
+    {
+        yield return new WaitForSeconds(0.5f);
+        takeDamage = false;
 
-    //    float directionX = transform.localScale.x * -1;
-    //    Vector2 rayOrigin = (Vector2)transform.position + new Vector2(directionX * 0.2f, 0.5f);
+    }
 
-    //    for (int i = 0; i < raysCount; i++) {
-    //        float range = Mathf.Lerp(0f, 70f, (float)i / (raysCount - 1));
+    IEnumerator PerformAttack()
+    {
+        float originalSpeed = moveSpeed;
+        moveSpeed = attackMoveSpeed;
+        animator.speed = 1.5f;
 
-    //        float angle = range * Mathf.Deg2Rad;
+        float timer = 0f;
 
-    //        float x = Mathf.Cos(angle) * directionX;
-    //        float y = Mathf.Sin(angle);
+        while (timer < dashDuration)
+        {
+            rb.velocity = new Vector2(movementX * moveSpeed, rb.velocity.y);
+            timer += Time.deltaTime;
+            yield return null;
+        }
 
-    //        Vector2 hitDirection = new Vector2(x, y).normalized;
+        isAttacking = false;
+        moveSpeed = originalSpeed;
+        animator.speed = 1f;
+    }
 
-    //        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, hitDirection, obstacleCheckRadius, groundLayer);
-    //        Debug.DrawRay(rayOrigin, hitDirection * obstacleCheckRadius, Color.cyan);
-
-
-
-    //        if (hit.collider != null && !hit.collider.CompareTag("Player"))
-    //        {
-    //            hits++;
-    //        }
-
-    //        if (hits >= 2)
-    //        {
-    //            Jump();
-    //        }
-
-    //    }
-
-
-
-
-
-    //}
+    public void DeleteBody()
+    {
+        Destroy(gameObject);
+    }
 
     private void OnDrawGizmosSelected()
     {
@@ -453,97 +492,6 @@ public class HardEnemyController : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawRay(rayOrigin, Vector2.right * directionX * obstacleCheckRadius);
 
-      
-    }
-
-
-    
-
-    //public void Attack()
-    //{
-    //    if (Time.time >= nextAttackTime && !takeDamage && playerAlive)
-    //    {
-    //        isAttacking = true;
-    //        animator.SetTrigger("attack");
-    //        StartCoroutine(PerformAttack());
-    //        nextAttackTime = Time.time + dashDuration + attackDelay;
-    //    }
-    //}
-
-    public void TakeDamage(Vector2 direction, float amountDamage)
-    {
-        if (!takeDamage && !isAttacking)
-        {
-            takeDamage = true;
-            animator.SetTrigger("hit");
-            live -= amountDamage;
-            if (live <= 0)
-            {
-                isDead = true;
-                isAttacking = false;
-                rb.velocity = new Vector2(0, rb.velocity.y);
-            }
-            else
-            {
-                Vector2 rebound = new Vector2(transform.position.x - direction.x, 1).normalized;
-                rb.velocity = Vector2.zero;
-                rb.AddForce(rebound * reboundForce, ForceMode2D.Impulse);
-                StartCoroutine(DisableDamage());
-            }
-        }
-    }
-
-    /// <summary>
-   
-    /// </summary>
-    /// <returns></returns>
-
-    IEnumerator DisableDamage()
-    {
-        yield return new WaitForSeconds(0.5f);
-        takeDamage = false;
 
     }
-
-    //IEnumerator PerformAttack()
-    //{
-
-    //    float originalSpeed = moveSpeed;
-
-    //    moveSpeed = attackMoveSpeed;
-
-    //    animator.speed = 1.5f;
-    //    float time = 0f;
-
-    //    while (time < dashDuration) {
-    //        if(time > 0.1f && Mathf.Abs(rb.velocity.x) < 0.1f) {
-    //            rb.velocity = new Vector2(movementX * moveSpeed, Mathf.Max(rb.velocity.y, jumpForce * 1f));
-    //            nextAttackTime = Time.time - dashDuration - attackDelay;
-    //            break;
-    //        }
-
-    //        rb.velocity = new Vector2(movementX * moveSpeed, rb.velocity.y);
-    //        time += Time.deltaTime;
-    //        yield return null;
-    //    }
-
-    //    if (!playerAlive)
-    //    {
-    //        movementX = 0;
-    //        isAttacking = false;
-    //        moveSpeed = originalSpeed;
-    //        animator.speed = 1.0f;
-    //    }
-    //    else { 
-
-    //        isAttacking = false;
-    //        moveSpeed = originalSpeed;
-    //        animator.speed = 1.0f;
-    //    }
-
-    //}
-
-    //public void DeleteBody() { 
-    //    Destroy(gameObject);
-    //}
 }

@@ -62,7 +62,7 @@ public class PlayerTest : MonoBehaviour
             RegenerateLive();
             Jump();
 
-            if (Input.GetKey(KeyCode.Z) && !isAttacking ) {
+            if (Input.GetKey(KeyCode.F) && !isAttacking ) {
                 Attack();
             }
 
@@ -80,7 +80,9 @@ public class PlayerTest : MonoBehaviour
 
         if (!takeDamage)
         {
-            if (moveInput != 0 && Input.GetKey(KeyCode.LeftShift)) sprint = true;
+            if (moveInput != 0 && Input.GetKey(KeyCode.LeftShift) && mana >= 2) { 
+                sprint = true; 
+            }
             else sprint = false;
 
             if (sprint) playerMovement = moveSprint;
@@ -95,6 +97,12 @@ public class PlayerTest : MonoBehaviour
                 );
 
                 rb.velocity = new Vector2(SmoothSpeed, rb.velocity.y);
+
+            if (sprint)
+            {
+                mana -= 2 * Time.deltaTime;
+                if (mana < 0) mana = 0;
+            }
 
         }
 
@@ -215,6 +223,8 @@ public class PlayerTest : MonoBehaviour
             rb.gravityScale = defaultGravity;
         }
     }
+
+
 
     private void OnDrawGizmos()
     {
