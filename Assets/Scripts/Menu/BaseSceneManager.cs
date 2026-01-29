@@ -53,7 +53,7 @@ public class BaseSceneManager : MonoBehaviour
         UpdateMusicButtonText();
     }
 
-    public void ToggleMusic()
+    protected void ToggleMusic()
     {
         // Invert state
         isMusicOn = !isMusicOn;
@@ -63,10 +63,15 @@ public class BaseSceneManager : MonoBehaviour
         PlayerPrefs.Save();
 
         // Apply to both channels
-        if(backgroundMusic != null) backgroundMusic.mute = !isMusicOn;
+        ApplyMusicSettings();
 
         // Update UI
         UpdateMusicButtonText();
+    }
+
+    protected void ApplyMusicSettings() 
+    {
+        if(backgroundMusic != null) backgroundMusic.mute = !isMusicOn;
     }
 
     protected void UpdateMusicButtonText()

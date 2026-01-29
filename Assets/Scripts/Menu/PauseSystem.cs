@@ -3,18 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PauseSystem : MonoBehaviour
+public class PauseSystem : BaseSceneManager
 {
-    [Header("Interface")]
+    [Header("Pause Settings")]
     public GameObject pauseMenu;
     public GameplaySystem gameplaySystem; // Reference to the central system
-
-    [Header("Sounds")]
-    public AudioSource soundEffect;
-    public AudioClip hoverSound;
-    public AudioClip clickSound;
-
     private bool isPaused = false; // Controls if the game logic is stopped
+
+
+    void Awake()
+    {
+        BaseAwake();
+    }
+
+    void Start()
+    {
+        BaseStart();
+    }
 
     void Update()
     {
@@ -55,7 +60,8 @@ public class PauseSystem : MonoBehaviour
         if(gameplaySystem != null)
         {
             // Reload current scene dynamically
-            gameplaySystem.ChangeScene(SceneManager.GetActiveScene().name);
+            string currentScene = SceneManager.GetActiveScene().name;
+            gameplaySystem.ExitScene(currentScene);
         }
     }
 
@@ -67,26 +73,7 @@ public class PauseSystem : MonoBehaviour
         if(gameplaySystem != null)
         {
             // Starts the coroutine to change scene to MainMenu
-            gameplaySystem.ChangeScene("MainMenu");
-        }
-    }
-
-    public void PlayHoverSound()
-    {
-        // Plays the UI hover sound effect
-        if(hoverSound != null && soundEffect != null)
-        {
-            soundEffect.PlayOneShot(hoverSound);
-        }
-    }
-    private void PlayClickSound()
-    {
-        Time.timeScale = 1f; // Important: Unpause time so animations/fades can run
-
-        // Plays the UI click sound effect
-        if(clickSound != null && soundEffect != null)
-        {
-            soundEffect.PlayOneShot(clickSound);
+            gameplaySystem.ExitScene("MainMenu");
         }
     }
 }
