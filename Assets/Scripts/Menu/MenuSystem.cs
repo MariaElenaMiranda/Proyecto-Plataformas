@@ -6,28 +6,34 @@ public class MenuSystem : BaseSceneManager
 {
     void Awake()
     {
-        BaseAwake();
+        BaseAwake(); // Run the parent logic first (Load prefs, Audio setup)
     }
 
     void Start()
     {
-        BaseStart();
+        BaseStart(); // Run parent start (Fade In sequence, Music play)
     }
 
-    //Play Button
+    //-----------------------------------------------------------------------------------------
+    // PUBLIC METHODS
+
     public void Play()
     {
-        ChangeScene("MapTest");
+        //Play Button
+        ChangeScene("MapTest"); // Load the game scene
     }
 
-    //Exit Button
     public void Exit()
     {
+        //Exit Button
+        // Only start if not already exiting
         if(!isTransitioning) StartCoroutine(ExitSequence());
     }
 
-//-----------------------------------------------------------------------------------
-//COROUTINES:
+//---------------------------------------------------------------------------------------------
+//COROUTINES
+
+    // Custom sequence to quit the game smoothly
     IEnumerator ExitSequence()
     {
         isTransitioning = true;
@@ -41,6 +47,6 @@ public class MenuSystem : BaseSceneManager
         yield return StartCoroutine(FadeOutSequence()); // Wait for FadeOut to finish
 
         Debug.Log("Exiting game...");
-        Application.Quit();
+        Application.Quit(); // Close application
     }
 }

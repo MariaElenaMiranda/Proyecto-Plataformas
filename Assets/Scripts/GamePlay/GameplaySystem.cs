@@ -2,46 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameplaySystem : BaseSceneManager
 {
     [Header("Gameplay Audio Settings")]
     public AudioSource bossThemeMusic; // The second source used for crossfading
-    public AudioLowPassFilter mainFilter; // Filtro del Bosque
-    public AudioLowPassFilter bossFilter;  // Filtro del Boss
+    public AudioLowPassFilter mainFilter; // Background music filter
+    public AudioLowPassFilter bossFilter;  // Boss music filter
 
     [Header("Filter Settings")]
     public float pausedFrequency = 500f;// Sounds like being underwater
     private float defaultFrequency = 22000f; // Fully open, clean sound
-    public float pausedVolume = 0.3f;
+    public float pausedVolume = 0.3f; // Volume when paused
 
+    //-----------------------------------------------------------------------------------------
+    //UNITY EVENTS
     void Awake()
     {
-        BaseAwake();
-        // Apply silence immediately to both sources
+        BaseAwake(); // Run the parent logic first
+
+        // Apply silence to boss music if needed
         if (bossThemeMusic != null) bossThemeMusic.mute = !isMusicOn;
     }
 
     void Start()
     {
-        BaseStart();
-        // Always make sure the game starts with clean audio
+        BaseStart(); // Run parent start
+
+        // Ensure filters are clean at start
         if(mainFilter != null) mainFilter.cutoffFrequency = defaultFrequency;
         if(bossFilter != null) bossFilter.cutoffFrequency = defaultFrequency;
     }
 
+    //-----------------------------------------------------------------------------------------
+    // PUBLIC METHODS
     public void ToggleGameplayMusic()
     {
-        ToggleMusic();
-        // Apply to both channels
+        ToggleMusic(); // Call the base logic
+
+        // Also apply to boss channel
         if(bossThemeMusic != null) bossThemeMusic.mute = !isMusicOn;
     }
 
     //to switch the background music (Boss Fight)
     public void SwitchMusic(AudioClip newMusicClip)
     {
-        // Only start the transition if the song is actually different
+        // Only start if the song is actually different
         if(backgroundMusic.clip != newMusicClip)
         {
             StartCoroutine(SwapMusic(newMusicClip));
@@ -55,33 +61,37 @@ public class GameplaySystem : BaseSceneManager
         float targetVolume = isPaused ? pausedVolume : defaultVolume;
         float targetFrequency = isPaused ? pausedFrequency : defaultFrequency;
 
-        // Start the coroutine to smooth the transition for both values
+        // Start smooth transition
         StartCoroutine(FadeAudioEffect(targetVolume, targetFrequency));
     }
 
+    // Bridge for PauseSystem to change scenes
     public void ExitScene(string sceneName)
     {
-        Time.timeScale = 1f;
-        ChangeScene(sceneName);
+        Time.timeScale = 1f; // Always unpause first
+        ChangeScene(sceneName); // Call protected base method
     }
 
-//-----------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------
 //COROUTINES:
+
     // Smooth transition for the "Underwater" filter effect
     IEnumerator FadeAudioEffect(float endVolume, float endFrequency)
     {
         if(backgroundMusic == null) yield break;
+
         float startVolume = backgroundMusic.volume;
 
-        // Get current frequency safely to avoid null errors
+        // Get current frequency safely
         float startFrequency = (mainFilter != null) ? mainFilter.cutoffFrequency : defaultFrequency;
-        float time = 0;
+
+        float time = 0; // Local timer for the lerp interpolation (0 to 1)
 
         while(time < 1)
         {
             // Using unscaledDeltaTime because TimeScale is 0 during Pause
             time += Time.unscaledDeltaTime * fadeSpeed;
-            
+
             // Interpolate Volume
             backgroundMusic.volume = Mathf.Lerp(startVolume, endVolume, time);
 
@@ -101,7 +111,7 @@ public class GameplaySystem : BaseSceneManager
     // Crossfade between two songs
     IEnumerator SwapMusic(AudioClip newMusicClip)
     {
-        // Local references to swap them easily later
+        // Local references
         AudioSource activeSource = backgroundMusic;
         AudioSource newSource = bossThemeMusic;
 
@@ -113,10 +123,12 @@ public class GameplaySystem : BaseSceneManager
         newSource.volume = 0;
         newSource.Play();
 
-        float timer = 0;
+        float timer = 0; // Local timer for the crossfade duration
         while(timer < 1)
         {
+            // Increase timer independent of game speed (Works even if paused)
             timer += Time.unscaledDeltaTime * fadeSpeed;
+
             // One volume goes down, the other goes up
             activeSource.volume = Mathf.Lerp(defaultVolume, 0, timer);
             newSource.volume = Mathf.Lerp(0, defaultVolume, timer);
@@ -133,10 +145,11 @@ public class GameplaySystem : BaseSceneManager
         activeSource.volume = 0;
         newSource.volume = defaultVolume;
 
-        // Swap variable references
+        // Swap variable references so BaseSceneManager controls the new song
         backgroundMusic = newSource;
         bossThemeMusic = activeSource;
 
+        // Update references: The new song becomes the "Main" one for future logic
         mainFilter = newFilter;
         bossFilter = activeFilter;
     }

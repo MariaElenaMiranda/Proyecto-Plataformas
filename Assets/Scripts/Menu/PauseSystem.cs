@@ -6,23 +6,29 @@ using UnityEngine.SceneManagement;
 public class PauseSystem : BaseSceneManager
 {
     [Header("Pause Settings")]
-    public GameObject pauseMenu;
-    public GameplaySystem gameplaySystem; // Reference to the central system
-    private bool isPaused = false; // Controls if the game logic is stopped
+    public GameObject pauseMenu; // The UI Panel with buttons
+    public GameplaySystem gameplaySystem; // Reference to the main controller
+    private bool isPaused = false; // Flag to check if game is frozen
 
+    //-----------------------------------------------------------------------------------------
+    //UNITY EVENTS
 
     void Awake()
     {
-        BaseAwake();
+        BaseAwake(); // Run parent logic
     }
 
     void Start()
     {
-        BaseStart();
+        BaseStart(); // Run parent start
+
+        // Safety Check: for to forgot to assign the system, try to find it
+        if(gameplaySystem == null) gameplaySystem = FindObjectOfType<GameplaySystem>();
     }
 
     void Update()
     {
+        // Check for Escape key press
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             if(isPaused) ResumeGame();
@@ -30,49 +36,55 @@ public class PauseSystem : BaseSceneManager
         }
     }
 
+    //-----------------------------------------------------------------------------------------
+    // PUBLIC METHODS
     public void PauseGame()
     {
         isPaused = true;
-        pauseMenu.SetActive(true);
-        Time.timeScale = 0f; // Freeze game time
 
-        // Notify system to lower music volume
+        // Show the Menu
+        if(pauseMenu != null) pauseMenu.SetActive(true);
+
+        Time.timeScale = 0f; // Stop time completely
+
+        // Notify system to lower music volume (Underwater effect)
         if(gameplaySystem != null) gameplaySystem.NotifyPause(true);
     }
 
-    //ResumeButton
     public void ResumeGame()
     {
         isPaused = false;
-        pauseMenu.SetActive(false);
-        Time.timeScale = 1f; // Resume game time
 
-        // Notify system to restore music volume
+        // Hide the Menu
+        if(pauseMenu != null) pauseMenu.SetActive(false);
+
+        Time.timeScale = 1f; // Resume normal time
+
+       // Restore music volume
         if(gameplaySystem != null) gameplaySystem.NotifyPause(false);
     }
 
-
-    //Restart button
     public void RestartGame()
     {
-        PlayClickSound();
+        PlayClickSound(); // Audio feedback
 
         if(gameplaySystem != null)
         {
-            // Reload current scene dynamically
+            // Get current scene name dynamically
             string currentScene = SceneManager.GetActiveScene().name;
+
+            // Ask GameplaySystem to handle the exit (Fade out, etc.)
             gameplaySystem.ExitScene(currentScene);
         }
     }
 
-    //MainMenu Button
     public void MainMenu()
     {
-        PlayClickSound();
+        PlayClickSound(); // Audio feedback
 
         if(gameplaySystem != null)
         {
-            // Starts the coroutine to change scene to MainMenu
+            // Return to main menu with transition
             gameplaySystem.ExitScene("MainMenu");
         }
     }
