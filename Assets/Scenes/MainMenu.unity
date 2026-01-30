@@ -179,9 +179,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab7320d40e5014b3281215887505afe9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicButtonText: {fileID: 743569287}
   blackScreen: {fileID: 1527053461}
   fadeSpeed: 2
+  musicButtonText: {fileID: 743569287}
   backgroundMusic: {fileID: 2037731780}
   soundEffect: {fileID: 998895427}
   hoverSound: {fileID: 8300000, guid: 4279673b67a794e32a3e7a1161896758, type: 3}
@@ -844,6 +844,10 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: PlayHoverSound
       objectReference: {fileID: 0}
+    - target: {fileID: 972310042752414875, guid: b710f8b8800bb4a1885d74220725960e, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BaseSceneManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 2279306282038584290, guid: b710f8b8800bb4a1885d74220725960e, type: 3}
       propertyPath: m_Name
       value: Menu
@@ -856,10 +860,22 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: PlayHoverSound
       objectReference: {fileID: 0}
+    - target: {fileID: 2366638775960394996, guid: b710f8b8800bb4a1885d74220725960e, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BaseSceneManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 3156408498460688942, guid: b710f8b8800bb4a1885d74220725960e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 963932002}
+    - target: {fileID: 3156408498460688942, guid: b710f8b8800bb4a1885d74220725960e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ToggleMusic
+      objectReference: {fileID: 0}
+    - target: {fileID: 3156408498460688942, guid: b710f8b8800bb4a1885d74220725960e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BaseSceneManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 4886441096280643893, guid: b710f8b8800bb4a1885d74220725960e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -960,6 +976,14 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 963932002}
+    - target: {fileID: 8519381889338258520, guid: b710f8b8800bb4a1885d74220725960e, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayHoverSound
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519381889338258520, guid: b710f8b8800bb4a1885d74220725960e, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BaseSceneManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
