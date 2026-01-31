@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class SignMsg : MonoBehaviour
 {
     public GameObject textObject;
+    [Multiline]
     public string message; // = "";
     public float visibleTime = 3f;
 
@@ -26,7 +27,6 @@ public class SignMsg : MonoBehaviour
             StartCoroutine(ShowMsg());
         }
     }
-
     IEnumerator ShowMsg()
     {
         textMesh.text = message;

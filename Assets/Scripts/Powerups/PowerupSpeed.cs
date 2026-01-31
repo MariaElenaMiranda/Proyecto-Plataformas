@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PowerupSpeed : MonoBehaviour
 {
-    public float value = 0.1f;
+    public float value = 0.025f;
  
     void OnTriggerEnter2D(Collider2D collision)
     {

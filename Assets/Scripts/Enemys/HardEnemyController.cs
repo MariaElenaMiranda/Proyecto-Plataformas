@@ -9,46 +9,36 @@ public class HardEnemyController : MonoBehaviour
 {
 
     public Transform player;
-
     public float detectionRadius = 5f;
     public float attackRadius = 3.5f;
     public float moveSpeed = 2.0f;
     public float reboundForce = 5f;
-
     private Rigidbody2D rb;
     private float movementX;
-
     private bool isGrounded;
     private bool hasAnyGround;
     private bool wasGrounded;
     private bool frontGrounded;
     private bool backGrounded;
-    
     private bool isAttacking;
     private float nextAttackTime = 0f;
     public float meleeAttackDamage = 2f;
-    public float attackDamage = 10f;
-
+    public float attackDamage = 6.5f;
     public float attackMoveSpeed = 10.0f;
-    
     public float dashDuration = 0.8f;
-    public float attackDelay = 3f;
-
-    public float live = 50f;
+    public float attackDelay = 5f;
+    public float live = 40f;
     public float minFallSpeed = 10f;
     public float fallDamageMultiplier = 1.5f;
     private float maxFallSpeed;
     private bool isDead;
-
     private Animator animator;
     private bool takeDamage = false;
-    
     public Transform groundCheck;
     public Transform groundCheckBehind;
     public float groundCheckDistance = 0.5f;
     public LayerMask groundLayer;
-
-    public float obstacleCheckRadius = 1.5f;                
+    public float obstacleCheckRadius = 1.5f;
     public float jumpForce = 5f;
     public float jumpDistance = 1.0f;
     public float jumpCooldown = 0.5f;
@@ -67,21 +57,14 @@ public class HardEnemyController : MonoBehaviour
     private float vy;
     private bool canJumpToWall;
     private bool canJumpToPlayer;
-
     private bool playerAlive;
 
-
-
-    // Start is called before the first frame update
     void Start()
     {
         playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
-
-
-    // Update is called once per frame
     void Update()
     {
         animator.SetBool("isDead", isDead);
@@ -90,24 +73,18 @@ public class HardEnemyController : MonoBehaviour
         animator.SetBool("isGrounded", isGrounded);
         animator.SetFloat("verticalSpeed", rb.velocity.y);
         animator.SetFloat("speed", Mathf.Abs(rb.velocity.x));
-        
+
         if (isAttacking || !playerAlive || isDead) return;
-   
+
         UpdateGroundedState();
         UpdateObstacleState();
         Movement();
         UpdateFallState();
-
-            
-        
-
-    }       
-
-    private void Movement() {
-        
+    }
+    private void Movement()
+    {
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         float horizontalDistance = Mathf.Abs(player.position.x - transform.position.x);
-        
 
         if (distanceToPlayer < detectionRadius)
 
@@ -150,21 +127,14 @@ public class HardEnemyController : MonoBehaviour
                     return;
                 }
             }
-            
             else if (isGrounded)
             {
-                
-
-                
-
-
                 if (playerAlive && !isDead)
                 {
                     Debug.Log("move to Player" + isAttacking);
                     if (horizontalDistance > 0.2f )
                     {
                         movementX = Mathf.Sign(player.position.x - transform.position.x);
-
                     }
                     else
                     {
@@ -179,7 +149,6 @@ public class HardEnemyController : MonoBehaviour
                     Attack();
                     return;
                 }
-
 
                 if (canJumpToWall )
                 {
@@ -203,7 +172,6 @@ public class HardEnemyController : MonoBehaviour
         }
     }
     private void LookUpdate() {
-
         Vector2 direction = (player.position - transform.position).normalized;
         if (direction.x < 0)
         {
@@ -215,7 +183,6 @@ public class HardEnemyController : MonoBehaviour
         }
         transform.localScale = new Vector3(directionX, transform.localScale.y, transform.localScale.z);
     }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -238,38 +205,30 @@ public class HardEnemyController : MonoBehaviour
             {
                 isAttacking = false;
                 movementX = 0;
-
             }
         }
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("sword"))
         {
             Vector2 damageDirection = new Vector2(collision.gameObject.transform.position.x, 0);
             PlayerTest player = collision.GetComponentInParent<PlayerTest>();
-
             TakeDamage(damageDirection, player.attackDamage);
-
         }
     }
-
     private void FixedUpdate()
     {
         Debug.Log(playerAlive);
         if (isDead || !playerAlive)
         {
-            
             rb.velocity = new Vector2(0f,rb.velocity.y);
             movementX = 0;
             return;
         }
         if (hasAnyGround && !takeDamage) {
-        
             rb.velocity = new Vector2(movementX * moveSpeed, rb.velocity.y);
         }
-        
     }
     private void JumpToObstacle()
     {
@@ -295,10 +254,8 @@ public class HardEnemyController : MonoBehaviour
         isGrounded = false;
         nextJumpTime = Time.time + jumpCooldown;
     }
-
     private void JumpToPlayer()
     {
-        
         if (Time.time < nextJumpTime || !isGrounded || !canJumpToPlayer || isAttacking) return;
 
         targetPosition = player.position;
@@ -307,7 +264,7 @@ public class HardEnemyController : MonoBehaviour
         float distance = delta.magnitude;
         float timeScale = Mathf.Clamp(distance / 5f, 0.8f, 1.2f);
         jumpTime *= timeScale;
-       
+
         vx = delta.x / jumpTime;
         vy = (delta.y - 0.5f * Physics2D.gravity.y * jumpTime * jumpTime) / jumpTime;
         vx = Mathf.Clamp(vx, -maxJumpVelocityX, maxJumpVelocityX);
@@ -318,8 +275,6 @@ public class HardEnemyController : MonoBehaviour
         isGrounded = false;
         nextJumpTime = Time.time + jumpCooldown;
     }
-
-
     private void UpdateGroundedState()
     {
         wasGrounded = hasAnyGround;
@@ -328,86 +283,64 @@ public class HardEnemyController : MonoBehaviour
 
         frontGrounded = hitFront.collider != null;
         backGrounded = hitBack.collider != null;
-
-       
-
         hasAnyGround = frontGrounded || backGrounded;
         isGrounded = frontGrounded && backGrounded;
 
-        
         if (!wasGrounded && hasAnyGround )
         {
             animator.SetTrigger("land");
             ApplyFallDamage();
             maxFallSpeed = 0f;
-            
         }
-       
-
-
     }
-  
     private void UpdateObstacleState()
     {
-        if (!isGrounded) { 
+        if (!isGrounded) {
             canJumpToWall = false;
             canJumpToPlayer = false;
             return;
         }
         Vector2 rayOrigin = new Vector2(transform.position.x, transform.position.y + 0.5f);
         float wallDir = Mathf.Sign(movementX);
+
         if (wallDir == 0) wallDir = Mathf.Sign(player.position.x - transform.position.x);
 
         hitWall = Physics2D.Raycast(rayOrigin, Vector2.right * wallDir, obstacleCheckRadius, groundLayer);
         Debug.DrawRay(rayOrigin, Vector2.right * wallDir * obstacleCheckRadius, Color.cyan);
 
-        bool wallCloseEnough = hitWall.collider != null; 
+        bool wallCloseEnough = hitWall.collider != null;
         RaycastHit2D hitUp = Physics2D.Raycast(transform.position, Vector2.up, detectionRadius, groundLayer);
         Debug.DrawRay(transform.position, Vector2.up * detectionRadius, Color.magenta);
 
         canJumpToWall = wallCloseEnough && hitUp.collider == null;
         canJumpToPlayer = hitUp.collider == null && !canJumpToWall;
-
-    
     }
-
     private void UpdateFallState()
     {
         if (!hasAnyGround && rb.velocity.y < -0.1f)
         {
-
             maxFallSpeed = Mathf.Max(maxFallSpeed, Mathf.Abs(rb.velocity.y));
         }
-
     }
-
     private void ApplyFallDamage()
     {
         float fallSpeed = Mathf.Abs(maxFallSpeed);
-
         if (fallSpeed >= minFallSpeed && !isAttacking)
         {
             float damage = (fallSpeed - minFallSpeed) * fallDamageMultiplier;
-
             TakeDamage(new Vector2(transform.position.x, 0), damage);
         }
-
-
     }
-
     public void Attack()
     {
         if (isAttacking ||!isGrounded ||Time.time < nextAttackTime ||takeDamage ||!playerAlive) return;
 
         isAttacking = true;
         movementX = Mathf.Sign(player.position.x - transform.position.x);
-
         animator.SetTrigger("attack");
         StartCoroutine(PerformAttack());
-
         nextAttackTime = Time.time + attackDelay;
     }
-
     public void TakeDamage(Vector2 direction, float amountDamage)
     {
         if (!takeDamage && !isAttacking)
@@ -430,68 +363,49 @@ public class HardEnemyController : MonoBehaviour
             }
         }
     }
-
     IEnumerator DisableDamage()
     {
         yield return new WaitForSeconds(0.5f);
         takeDamage = false;
-
     }
-
     IEnumerator PerformAttack()
     {
         float originalSpeed = moveSpeed;
         moveSpeed = attackMoveSpeed;
         animator.speed = 1.5f;
-
         float timer = 0f;
-
         while (timer < dashDuration)
         {
             rb.velocity = new Vector2(movementX * moveSpeed, rb.velocity.y);
             timer += Time.deltaTime;
             yield return null;
         }
-
         isAttacking = false;
         moveSpeed = originalSpeed;
         animator.speed = 1f;
     }
-
     public void DeleteBody()
     {
         Destroy(gameObject);
     }
-
     private void OnDrawGizmosSelected()
     {
-
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
-
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, attackRadius);
-
         if (groundCheck != null)
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckDistance);
-
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(groundCheckBehind.position, groundCheckBehind.position + Vector3.down * groundCheckDistance);
         }
-
         Gizmos.color = Color.magenta;
         Gizmos.DrawRay(transform.position, Vector2.up * detectionRadius);
-
-        // 4. Detector de pared frontal (Raycast Wall)
-        // Usamos la escala para saber hacia dónde apunta el rayo de la pared
         float directionX = (transform.localScale.x < 0) ? 1f : -1f;
         Vector3 rayOrigin = new Vector3(transform.position.x, transform.position.y + 0.5f, 0);
-
         Gizmos.color = Color.cyan;
         Gizmos.DrawRay(rayOrigin, Vector2.right * directionX * obstacleCheckRadius);
-
-
     }
 }
