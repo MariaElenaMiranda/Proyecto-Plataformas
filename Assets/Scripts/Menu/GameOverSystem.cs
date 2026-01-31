@@ -25,6 +25,6 @@ public class GameOverSystem : BaseSceneManager
 
     public void RestartGame()
     {
-        ChangeScene("MapTest"); // Reload the Level
+        ChangeScene("Map"); // Reload the Level
     }
 }

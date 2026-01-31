@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerTest : MonoBehaviour
@@ -30,11 +31,16 @@ public class PlayerTest : MonoBehaviour
     private float smoothSpeed;
     private Rigidbody2D rb;
     public Animator animator;
+    public GameplaySystem gameplaySystem; // Reference to change scenes
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         defaultGravity = rb.gravityScale;
+
+        // Auto-find the system if not assigned
+        if (gameplaySystem == null) gameplaySystem = FindObjectOfType<GameplaySystem>();
+
     }
     void Update()
     {
@@ -158,7 +164,7 @@ public class PlayerTest : MonoBehaviour
             if (live <= 0)
             {
                 live = 0;
-                isDead = true;
+                StartCoroutine(DeathSequence()); // Start the death coroutine
                 return;
             }
             if (!isDead)
@@ -223,9 +229,11 @@ public class PlayerTest : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        // Check if player hit the bottom death zone
         if (collision.CompareTag("BottomLimit"))
         {
-            this.isDead = true;
+            // Start death sequence only if not already dead
+            if (!isDead) StartCoroutine(DeathSequence());
         }
     }
 
@@ -246,5 +254,16 @@ public class PlayerTest : MonoBehaviour
     public void IncreaseSpeedMovement(float percent)
     {
         this.moveSpeed += this.moveSpeed * percent;
+    }
+
+    IEnumerator DeathSequence()
+    {
+        isDead = true; // Set dead state
+        rb.velocity = Vector2.zero; // Stop movement immediately to prevent sliding
+
+        yield return new WaitForSeconds(1.5f); // Wait for death animation to finish (1.5 seconds)
+
+        // Call the system to Fade Out and change scene
+        if (gameplaySystem != null) gameplaySystem.ExitScene("GameOverMenu");
     }
 }
