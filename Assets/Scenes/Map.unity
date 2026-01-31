@@ -60263,6 +60263,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1072816760980927449, guid: c0f62620b587eb8439417084f6cdfbf3, type: 3}
+      propertyPath: gameplaySystem
+      value: 
+      objectReference: {fileID: 1566840576}
+    - target: {fileID: 1072816760980927449, guid: c0f62620b587eb8439417084f6cdfbf3, type: 3}
       propertyPath: liveRegenPorcent
       value: 20
       objectReference: {fileID: 0}
