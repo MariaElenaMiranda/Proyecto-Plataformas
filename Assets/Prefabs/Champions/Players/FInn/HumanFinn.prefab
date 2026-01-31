@@ -178,16 +178,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e8ec50cca93240798971524f1f0336a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 4
   playerMovement: 0
   sprint: 0
   jumpForce: 5
   reboundForce: 5
   mana: 100
-  manaRegenPercent: 15
+  manaRegenPercent: 75
   maxMana: 100
   live: 100
-  liveRegenPorcent: 15
+  liveRegenPercent: 50
   maxLive: 100
   lengthRay: 0.55
   fallMultiplier: 2.5

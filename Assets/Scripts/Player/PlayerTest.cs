@@ -2,47 +2,33 @@ using UnityEngine;
 
 public class PlayerTest : MonoBehaviour
 {
-
     public float moveSpeed = 4f;
     public float moveSprint => moveSpeed * 2f;
     public float playerMovement;
     public bool sprint = false;
-
     public float jumpForce = 5f;
     public float reboundForce = 5f;
-
     public float mana = 100f;
     public float manaRegenPercent = 75f;
     public float maxMana = 100f;
-
     public float live = 100f;
     public float liveRegenPercent = 50f;
     public float maxLive = 100f;
-
     public float lengthRay = 0.55f;
-
-
     public float fallMultiplier = 2.5f;
     private float defaultGravity;
-
     public LayerMask groundLayer;
-
     private bool isGrounded;
     private bool canDoubleJump;
     public float doubleJumpForce => jumpForce * 1.5f;
-
     private bool takeDamage;
     public bool isDead;
     private bool isAttacking;
     public float attackDamage = 10;
     private float originalDamage;
-
-    //// Variables de suavizado
     public float smoothTime = 0.1f;
     private float smoothSpeed;
-
     private Rigidbody2D rb;
-
     public Animator animator;
 
     private void Start()
@@ -50,7 +36,6 @@ public class PlayerTest : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         defaultGravity = rb.gravityScale;
     }
-
     void Update()
     {
         if (!isDead)
@@ -65,7 +50,6 @@ public class PlayerTest : MonoBehaviour
             {
                 Attack();
             }
-
         }
 
         animator.SetBool("isGrounded", isGrounded);
@@ -81,7 +65,7 @@ public class PlayerTest : MonoBehaviour
         if (!takeDamage)
         {
             if (moveInput != 0 && Input.GetKey(KeyCode.LeftShift) && mana >= 2) { 
-                sprint = true; 
+                sprint = true;
             }
             else sprint = false;
 
@@ -237,8 +221,16 @@ public class PlayerTest : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * lengthRay);
     }
 
-    // Powerups
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("BottomLimit"))
+        {
+            this.isDead = true;
+        }
+    }
 
+
+    // Powerups
     public void IncreaseLifeRegen(float percent)
     {
         this.liveRegenPercent += this.liveRegenPercent * percent;
