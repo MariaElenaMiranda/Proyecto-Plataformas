@@ -20,7 +20,7 @@ public class MenuSystem : BaseSceneManager
     public void Play()
     {
         //Play Button
-        ChangeScene("MapTest"); // Load the game scene
+        ChangeScene("Map"); // Load the game scene
     }
 
     public void Exit()

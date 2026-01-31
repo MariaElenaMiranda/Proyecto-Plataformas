@@ -19,7 +19,7 @@ public class VictorySystem : BaseSceneManager
     public void NewGame()
     {
         // Reloads the game scene to start over
-        ChangeScene("MapTest"); // Play Again Button
+        ChangeScene("Map"); // Play Again Button
     }
 
     public void MainMenu()
