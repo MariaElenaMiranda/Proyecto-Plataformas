@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MusicTrigger : MonoBehaviour
@@ -7,7 +5,6 @@ public class MusicTrigger : MonoBehaviour
     [Header("Configuration")]
     public AudioClip musicBoss; // The music clip to switch to
     public GameplaySystem gameplaySystem; // Reference to the audio manager
-
     [Header("Internal Settings")]
     private bool isTriggered = false; // Ensures the trigger only works once
 
