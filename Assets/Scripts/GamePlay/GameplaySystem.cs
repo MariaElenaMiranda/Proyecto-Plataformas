@@ -9,7 +9,6 @@ public class GameplaySystem : BaseSceneManager
     public AudioSource bossThemeMusic; // The second source used for crossfading
     public AudioLowPassFilter mainFilter; // Background music filter
     public AudioLowPassFilter bossFilter;  // Boss music filter
-
     [Header("Filter Settings")]
     public float pausedFrequency = 500f;// Sounds like being underwater
     private float defaultFrequency = 22000f; // Fully open, clean sound
@@ -84,7 +83,6 @@ public class GameplaySystem : BaseSceneManager
 
         // Get current frequency safely
         float startFrequency = (mainFilter != null) ? mainFilter.cutoffFrequency : defaultFrequency;
-
         float time = 0; // Local timer for the lerp interpolation (0 to 1)
 
         while(time < 1)

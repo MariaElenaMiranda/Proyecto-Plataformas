@@ -242,6 +242,12 @@ public class PlayerTest : MonoBehaviour
             TakeDamage(damageDirection, boss.attackDamage);
 
         }
+        // Check if player hit the bottom death zone
+        else if (collision.CompareTag("BottomLimit"))
+        {
+            // Start death sequence only if not already dead
+            if (!isDead) StartCoroutine(DeathSequence());
+        }
     }
 
 
@@ -250,17 +256,6 @@ public class PlayerTest : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * lengthRay);
     }
-
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        // Check if player hit the bottom death zone
-        if (collision.CompareTag("BottomLimit"))
-        {
-            // Start death sequence only if not already dead
-            if (!isDead) StartCoroutine(DeathSequence());
-        }
-    }
-
 
     // Powerups
     public void IncreaseLifeRegen(float percent)

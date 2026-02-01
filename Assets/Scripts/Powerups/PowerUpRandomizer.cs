@@ -3,12 +3,10 @@ using UnityEngine;
 public class PowerUpRandomizer : MonoBehaviour
 {
     public GameObject[] powerupsList;
-
     void Start()
     {
         GeneratePowerup();
     }
-
     void GeneratePowerup()
     {
         if (powerupsList.Length > 0)
@@ -19,7 +17,6 @@ public class PowerUpRandomizer : MonoBehaviour
         {
             Debug.Log("There are no powerups!");
         }
-
         Destroy(gameObject);
     }
 }

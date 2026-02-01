@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PowerupAttack : MonoBehaviour
 {
-    public float value = 0.20f;
-
+    public float value = 0.175f;
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
