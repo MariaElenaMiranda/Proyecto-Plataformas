@@ -12,7 +12,7 @@ public class EasyEnemyController : MonoBehaviour
     private Rigidbody2D rb;
     private float movementX;
     private bool isMoving;
-    public float live = 30f;
+    public float live = 20f;
     private bool isDead;
     private Animator animator;
     private bool takeDamage = false;
