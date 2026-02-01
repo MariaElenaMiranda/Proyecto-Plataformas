@@ -3,33 +3,49 @@ using UnityEngine;
 
 public class PlayerTest : MonoBehaviour
 {
+    [Header("Movement Configuration")]
     public float moveSpeed = 4f;
     public float moveSprint => moveSpeed * 2f;
     public float playerMovement;
     public bool sprint = false;
     public float jumpForce = 5f;
     public float reboundForce = 5f;
-    public float mana = 100f;
-    public float manaRegenPercent = 75f;
-    public float maxMana = 100f;
-    public float live = 100f;
-    public float liveRegenPercent = 50f;
-    public float maxLive = 100f;
-    public float lengthRay = 0.55f;
-    public float fallMultiplier = 2.5f;
-    private float defaultGravity;
-    public LayerMask groundLayer;
     private bool isGrounded;
     private bool canDoubleJump;
     public float doubleJumpForce => jumpForce * 1.5f;
-    private bool takeDamage;
+    public float lengthRay = 0.55f;
+    public float fallMultiplier = 2.5f;
+    private float defaultGravity;
+    [Header("Mana Configuration")]
+    public float mana = 100f;
+    public float manaRegenPercent = 75f;
+    public float maxMana = 100f;
+    public float basicAttackManaCost = 4f;
+    public float powerAttackManaMultiplier = 2f;
+    public float PowerAttackManaCost => basicAttackManaCost * powerAttackManaMultiplier;
+    [Header("Life Configuration")]
+    public float live = 100f;
+    public float liveRegenPercent = 50f;
+    public float maxLive = 100f;
+    [Header("Attack Configuration")]
+    public float attackDamage = 7;
+    public float powerAttackMultiplier = 1.75f;
+    public float PowerAttackDamage => attackDamage * powerAttackMultiplier;
     public bool isDead;
     private bool isAttacking;
-    public float attackDamage = 10;
-    private float originalDamage;
+    private bool takeDamage;
+    [Header("Powerups")]
+    public int LifePowerUpQty = 0;
+    public int ManaPowerUpQty = 0;
+    public int AttackPowerUpQty = 0;
+    public int SpeedPowerUpQty = 0;
+    [Header("Others")]
     public float smoothTime = 0.1f;
+    private float originalDamage;
     private float smoothSpeed;
     private Rigidbody2D rb;
+    [Header("Auto Selection")]
+    public LayerMask groundLayer;
     public Animator animator;
     public GameplaySystem gameplaySystem; // Reference to change scenes
 
@@ -37,10 +53,9 @@ public class PlayerTest : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         defaultGravity = rb.gravityScale;
-
-        // Auto-find the system if not assigned
-        if (gameplaySystem == null) gameplaySystem = FindObjectOfType<GameplaySystem>();
-
+        gameplaySystem = GameObject.Find("GameplayManager").GetComponent<GameplaySystem>();
+        animator = GameObject.Find("HumanFinn").GetComponent<Animator>();
+        groundLayer = LayerMask.GetMask("ground");
     }
     void Update()
     {
@@ -70,7 +85,7 @@ public class PlayerTest : MonoBehaviour
 
         if (!takeDamage)
         {
-            if (moveInput != 0 && Input.GetKey(KeyCode.LeftShift) && mana >= 2) { 
+            if (moveInput != 0 && Input.GetKey(KeyCode.LeftShift) && mana >= 2) {
                 sprint = true;
             }
             else sprint = false;
@@ -184,20 +199,19 @@ public class PlayerTest : MonoBehaviour
     public void Attack()
     {
         originalDamage = attackDamage;
-        if (mana >= 15)
+        if (mana >= basicAttackManaCost)
         {
-            if (sprint)
+            if (sprint && mana >= PowerAttackManaCost)
             {
                 isAttacking = true;
-                mana -= 15f;
-                attackDamage = attackDamage * 2;
+                mana -= PowerAttackManaCost;
+                attackDamage = PowerAttackDamage;
             }
             else
             {
                 isAttacking = true;
-                mana -= 5f;
+                mana -= basicAttackManaCost;
             }
-
         }
     }
 
@@ -219,8 +233,6 @@ public class PlayerTest : MonoBehaviour
         }
     }
 
-
-
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -241,18 +253,22 @@ public class PlayerTest : MonoBehaviour
     // Powerups
     public void IncreaseLifeRegen(float percent)
     {
+        LifePowerUpQty++;
         this.liveRegenPercent += this.liveRegenPercent * percent;
     }
     public void IncreaseManaRegen(float percent)
     {
+        ManaPowerUpQty++;
         this.manaRegenPercent += this.manaRegenPercent * percent;
     }
     public void IncreaseAttackDamage(float percent)
     {
+        AttackPowerUpQty++;
         this.attackDamage += this.attackDamage * percent;
     }
     public void IncreaseSpeedMovement(float percent)
     {
+        SpeedPowerUpQty++;
         this.moveSpeed += this.moveSpeed * percent;
     }
 

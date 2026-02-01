@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PowerupHealing : MonoBehaviour
 {
-    public float value = 0.25f;
+    public float value = 0.20f;
 
     void OnTriggerEnter2D(Collider2D collision)
     {
