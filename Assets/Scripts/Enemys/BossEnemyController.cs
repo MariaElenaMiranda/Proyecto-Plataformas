@@ -531,10 +531,10 @@ public class BossEnemyController : MonoBehaviour
     }
     IEnumerator RecoverSwordCoroutine()
     {
-        // Espera 3 segundos (puedes crear una variable public float swordCooldown)
+       
         yield return new WaitForSeconds(3f);
 
-        haveSword = true; // ¡La espada vuelve a estar disponible!
+        haveSword = true; 
         Debug.Log("El Boss ha recuperado su espada");
     }
 
@@ -572,8 +572,7 @@ public class BossEnemyController : MonoBehaviour
         Gizmos.color = Color.magenta;
         Gizmos.DrawRay(transform.position, Vector2.up * detectionRadius);
 
-        // 4. Detector de pared frontal (Raycast Wall)
-        // Usamos la escala para saber hacia dónde apunta el rayo de la pared
+       
         float directionX = (transform.localScale.x < 0) ? 1f : -1f;
         Vector3 rayOrigin = new Vector3(transform.position.x, transform.position.y + 0.5f, 0);
 
