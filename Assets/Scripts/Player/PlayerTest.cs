@@ -223,7 +223,17 @@ public class PlayerTest : MonoBehaviour
             rb.gravityScale = defaultGravity;
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("BossSword"))
+        {
+            Vector2 damageDirection = new Vector2(collision.gameObject.transform.position.x, 0);
+            BossEnemyController boss = collision.GetComponentInParent<BossEnemyController>();
 
+            TakeDamage(damageDirection, boss.attackDamage);
+
+        }
+    }
 
 
     private void OnDrawGizmos()

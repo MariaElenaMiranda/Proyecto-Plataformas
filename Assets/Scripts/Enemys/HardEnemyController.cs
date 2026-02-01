@@ -307,7 +307,7 @@ public class HardEnemyController : MonoBehaviour
         float distance = delta.magnitude;
         float timeScale = Mathf.Clamp(distance / 5f, 0.8f, 1.2f);
         jumpTime *= timeScale;
-       
+        delta = targetPosition - (Vector2)transform.position;
         vx = delta.x / jumpTime;
         vy = (delta.y - 0.5f * Physics2D.gravity.y * jumpTime * jumpTime) / jumpTime;
         vx = Mathf.Clamp(vx, -maxJumpVelocityX, maxJumpVelocityX);

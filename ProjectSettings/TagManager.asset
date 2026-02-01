@@ -6,6 +6,7 @@ TagManager:
   tags:
   - sword
   - BottomLimit
+  - BossSword
   layers:
   - Default
   - TransparentFX
