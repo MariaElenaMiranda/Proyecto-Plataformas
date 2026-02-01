@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PowerupManareg : MonoBehaviour
 {
-    public float value = 0.25f;
+    public float value = 0.15f;
 
     void OnTriggerEnter2D(Collider2D collision)
     {

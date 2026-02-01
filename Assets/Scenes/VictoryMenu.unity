@@ -259,7 +259,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 948820171}
-  - component: {fileID: 948820174}
+  - component: {fileID: 948820172}
   m_Layer: 0
   m_Name: VictoryManager
   m_TagString: Untagged
@@ -284,7 +284,7 @@ Transform:
   - {fileID: 478882550}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &948820174
+--- !u!114 &948820172
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -298,6 +298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackScreen: {fileID: 1524618015}
   fadeSpeed: 2
+  musicButtonText: {fileID: 0}
   backgroundMusic: {fileID: 1523099158}
   soundEffect: {fileID: 478882549}
   hoverSound: {fileID: 8300000, guid: 4279673b67a794e32a3e7a1161896758, type: 3}
@@ -861,15 +862,31 @@ PrefabInstance:
     - target: {fileID: 722680882273711634, guid: d2f71aef6bdc44865b85ca46b3b98d54, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 948820174}
+      objectReference: {fileID: 948820172}
+    - target: {fileID: 722680882273711634, guid: d2f71aef6bdc44865b85ca46b3b98d54, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NewGame
+      objectReference: {fileID: 0}
     - target: {fileID: 1121940637754524892, guid: d2f71aef6bdc44865b85ca46b3b98d54, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 948820174}
+      objectReference: {fileID: 948820172}
+    - target: {fileID: 1121940637754524892, guid: d2f71aef6bdc44865b85ca46b3b98d54, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayHoverSound
+      objectReference: {fileID: 0}
+    - target: {fileID: 1121940637754524892, guid: d2f71aef6bdc44865b85ca46b3b98d54, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BaseSceneManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1920882778681841627, guid: d2f71aef6bdc44865b85ca46b3b98d54, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 948820174}
+      objectReference: {fileID: 948820172}
+    - target: {fileID: 1920882778681841627, guid: d2f71aef6bdc44865b85ca46b3b98d54, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: MainMenu
+      objectReference: {fileID: 0}
     - target: {fileID: 3999162010248191419, guid: d2f71aef6bdc44865b85ca46b3b98d54, type: 3}
       propertyPath: m_Name
       value: WinnerMenu
@@ -877,7 +894,15 @@ PrefabInstance:
     - target: {fileID: 6321777746382417484, guid: d2f71aef6bdc44865b85ca46b3b98d54, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 948820174}
+      objectReference: {fileID: 948820172}
+    - target: {fileID: 6321777746382417484, guid: d2f71aef6bdc44865b85ca46b3b98d54, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayHoverSound
+      objectReference: {fileID: 0}
+    - target: {fileID: 6321777746382417484, guid: d2f71aef6bdc44865b85ca46b3b98d54, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BaseSceneManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 8940827806569876749, guid: d2f71aef6bdc44865b85ca46b3b98d54, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

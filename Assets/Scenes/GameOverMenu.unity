@@ -131,7 +131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 948820171}
-  - component: {fileID: 948820170}
+  - component: {fileID: 948820172}
   m_Layer: 0
   m_Name: GameOverManager
   m_TagString: Untagged
@@ -139,24 +139,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &948820170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948820169}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7eeda0229fce4312b1913af1f9ae048, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blackScreen: {fileID: 1524618015}
-  fadeSpeed: 2
-  backgroundMusic: {fileID: 1029189580}
-  soundEffect: {fileID: 1406079419}
-  hoverSound: {fileID: 8300000, guid: 4279673b67a794e32a3e7a1161896758, type: 3}
-  clickSound: {fileID: 8300000, guid: a79a553cb0b834ed288b8835c123965c, type: 3}
 --- !u!4 &948820171
 Transform:
   m_ObjectHideFlags: 0
@@ -174,6 +156,25 @@ Transform:
   - {fileID: 1406079420}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &948820172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948820169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7eeda0229fce4312b1913af1f9ae048, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blackScreen: {fileID: 1524618015}
+  fadeSpeed: 2
+  musicButtonText: {fileID: 0}
+  backgroundMusic: {fileID: 1029189580}
+  soundEffect: {fileID: 1406079419}
+  hoverSound: {fileID: 8300000, guid: 4279673b67a794e32a3e7a1161896758, type: 3}
+  clickSound: {fileID: 8300000, guid: a79a553cb0b834ed288b8835c123965c, type: 3}
 --- !u!1 &1029189578
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,7 +942,15 @@ PrefabInstance:
     - target: {fileID: 4494653973085130021, guid: c2515b83112534b81ba2b713343ee500, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 948820170}
+      objectReference: {fileID: 948820172}
+    - target: {fileID: 4494653973085130021, guid: c2515b83112534b81ba2b713343ee500, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlayHoverSound
+      objectReference: {fileID: 0}
+    - target: {fileID: 4494653973085130021, guid: c2515b83112534b81ba2b713343ee500, type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BaseSceneManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 4940901262379184190, guid: c2515b83112534b81ba2b713343ee500, type: 3}
       propertyPath: m_Name
       value: GameOverMenu
@@ -949,7 +958,11 @@ PrefabInstance:
     - target: {fileID: 8458528816393512525, guid: c2515b83112534b81ba2b713343ee500, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 948820170}
+      objectReference: {fileID: 948820172}
+    - target: {fileID: 8458528816393512525, guid: c2515b83112534b81ba2b713343ee500, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: MainMenu
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
