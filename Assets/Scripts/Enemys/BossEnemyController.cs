@@ -357,6 +357,13 @@ public class BossEnemyController : MonoBehaviour
                 isDead = true;
                 isAttacking = false;
                 rb.velocity = new Vector2(0, rb.velocity.y);
+
+                //Trigger Victory
+                if(player != null)
+                {
+                    // Access Player script and trigger WinGame directly
+                    player.GetComponent<PlayerTest>().WinGame();
+                }
             }
             else
             {
