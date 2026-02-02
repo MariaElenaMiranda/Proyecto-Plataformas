@@ -16,7 +16,7 @@ public class BossEnemyController : MonoBehaviour
     private bool frontGrounded;
     private bool backGrounded;
     private bool isAttacking;
-    private float nextAttackTime = 0f;
+    public float nextAttackTime = 2f;
     public float meleeAttackDamage = 5f;
     public float attackDamage = 10f;
     public float attackMoveSpeed = 15.0f;
@@ -46,7 +46,7 @@ public class BossEnemyController : MonoBehaviour
     public float maxJumpVelocityY = 9f;
     private Vector2 targetPosition;
     private Vector2 delta ;
-    private float jumpTime =0.5f;
+    private float jumpTime = 0.5f ;
     private float vx;
     private float vy;
     private bool canJumpToWall;
@@ -55,6 +55,8 @@ public class BossEnemyController : MonoBehaviour
     private bool haveSword = true;
     public GameObject swordPrefab;
     public Transform firePoint;
+    public float launchTime = 2f;
+    public float launchDelay = 5f;
 
     void Start()
     {
@@ -248,23 +250,32 @@ public class BossEnemyController : MonoBehaviour
     private void JumpToPlayer()
     {
         if (Time.time < nextJumpTime || !isGrounded || !canJumpToPlayer || isAttacking) return;
+        float jumpDir = -directionX;
+        targetPosition = new Vector2(
+            player.position.x + jumpDir * wallJumpHorizontalDistance,
+            player.position.y + wallJumpHeight
+        );
         targetPosition = player.position;
         Debug.DrawLine(transform.position, targetPosition, Color.green, 1f);
+        delta = targetPosition - (Vector2)transform.position;
         float distance = delta.magnitude;
         float timeScale = Mathf.Clamp(distance / 5f, 0.8f, 1.2f);
-        jumpTime *= timeScale;
-        delta = targetPosition - (Vector2)transform.position;
+        //jumpTime *= timeScale;
+
         vx = delta.x / jumpTime;
         vy = (delta.y - 0.5f * Physics2D.gravity.y * jumpTime * jumpTime) / jumpTime;
         vx = Mathf.Clamp(vx, -maxJumpVelocityX, maxJumpVelocityX);
         vy = Mathf.Clamp(vy, 0f, maxJumpVelocityY);
         movementX = vx;
         rb.velocity = new Vector2(vx, vy);
+
         isGrounded = false;
         nextJumpTime = Time.time + jumpCooldown;
     }
 
-    private void UpdateGroundedState()
+
+
+    private void UpdateGroundedState() 
     {
         wasGrounded = hasAnyGround;
         RaycastHit2D hitFront = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
@@ -277,7 +288,7 @@ public class BossEnemyController : MonoBehaviour
         if (!wasGrounded && hasAnyGround )
         {
             animator.SetTrigger("land");
-            ApplyFallDamage();
+            //ApplyFallDamage();
             maxFallSpeed = 0f;
             if (isAttacking)
             {
@@ -313,15 +324,15 @@ public class BossEnemyController : MonoBehaviour
         }
     }
 
-    private void ApplyFallDamage()
-    {
-        float fallSpeed = Mathf.Abs(maxFallSpeed);
-        if (fallSpeed >= minFallSpeed && !isAttacking)
-        {
-            float damage = (fallSpeed - minFallSpeed) * fallDamageMultiplier;
-            TakeDamage(new Vector2(transform.position.x, 0), damage);
-        }
-    }
+    //private void ApplyFallDamage()
+    //{
+    //    float fallSpeed = Mathf.Abs(maxFallSpeed);
+    //    if (fallSpeed >= minFallSpeed && !isAttacking)
+    //    {
+    //        float damage = (fallSpeed - minFallSpeed) * fallDamageMultiplier;
+    //        TakeDamage(new Vector2(transform.position.x, 0), damage);
+    //    }
+    //}
 
     public void Attack()
     {
@@ -394,11 +405,12 @@ public class BossEnemyController : MonoBehaviour
 
     public void LaunchSword()
     {
-        if (swordPrefab == null || player == null || !isGrounded || isAttacking) return;
+        if (swordPrefab == null || player == null || !isGrounded || isAttacking || Time.time < launchTime) return;
         isAttacking = true;
         movementX = 0;
         rb.velocity = new Vector2(0, rb.velocity.y);
         animator.SetTrigger("throw_sword");
+        launchTime = Time.time + launchDelay;
     }
 
     public void ExecuteSwordThrow()

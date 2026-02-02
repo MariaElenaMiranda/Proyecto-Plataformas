@@ -31,7 +31,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.26666668
+        time: 0.16666667
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -40,7 +40,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.6666667
+        time: 0.41666666
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -61,15 +61,15 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: -318282350, guid: 0c70b3dcc7633554e8d0feaf016203e5, type: 3}
-    - time: 0.15
+    - time: 0.083333336
       value: {fileID: -318282350, guid: 0c70b3dcc7633554e8d0feaf016203e5, type: 3}
-    - time: 0.26666668
+    - time: 0.16666667
       value: {fileID: 984620448, guid: 0c70b3dcc7633554e8d0feaf016203e5, type: 3}
-    - time: 0.43333334
+    - time: 0.25
       value: {fileID: 1025307283, guid: 0c70b3dcc7633554e8d0feaf016203e5, type: 3}
-    - time: 0.5833333
+    - time: 0.33333334
       value: {fileID: 1281712916, guid: 0c70b3dcc7633554e8d0feaf016203e5, type: 3}
-    - time: 0.6666667
+    - time: 0.41666666
       value: {fileID: -318282350, guid: 0c70b3dcc7633554e8d0feaf016203e5, type: 3}
     attribute: m_Sprite
     path: 
@@ -113,7 +113,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 1.2
+    m_StopTime: 0.43333334
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -143,7 +143,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.26666668
+        time: 0.16666667
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -152,7 +152,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.6666667
+        time: 0.41666666
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -172,22 +172,8 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.5833333
+  - time: 0.33333334
     functionName: DisableAttack
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.75
-    functionName: 
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 1.2
-    functionName: 
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
