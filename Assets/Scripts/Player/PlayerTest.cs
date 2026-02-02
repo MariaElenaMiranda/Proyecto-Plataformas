@@ -34,6 +34,7 @@ public class PlayerTest : MonoBehaviour
     public bool isDead;
     private bool isAttacking;
     private bool takeDamage;
+    private bool isVictory = false;
     [Header("Powerups")]
     public int LifePowerUpQty = 0;
     public int ManaPowerUpQty = 0;
@@ -59,7 +60,7 @@ public class PlayerTest : MonoBehaviour
     }
     void Update()
     {
-        if (!isDead)
+        if (!isDead && !isVictory) // Execute logic only if alive and game is not won
         {
             Movement();
             Gravity();
@@ -121,9 +122,8 @@ public class PlayerTest : MonoBehaviour
         {
             transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
         }
-
-
     }
+
     private void Jump()
     {
         isGrounded = Mathf.Abs(rb.velocity.y) < 0.01f;
@@ -171,7 +171,7 @@ public class PlayerTest : MonoBehaviour
 
     public void TakeDamage(Vector2 direction, float amountDamage)
     {
-        if (!takeDamage)
+        if (!takeDamage && !isDead && !isVictory) // Check conditions: Not taking damage, Not Dead, and Not Won
         {
             takeDamage = true;
             live -= amountDamage;
@@ -232,6 +232,16 @@ public class PlayerTest : MonoBehaviour
             rb.gravityScale = defaultGravity;
         }
     }
+
+    public void WinGame()
+    {
+        // Ensure victory logic runs only once and if alive |
+        if(!isDead && !isVictory)
+        {
+            StartCoroutine(VictorySequence());
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("BossSword"))
@@ -288,5 +298,18 @@ public class PlayerTest : MonoBehaviour
 
         // Call the system to Fade Out and change scene
         if (gameplaySystem != null) gameplaySystem.ExitScene("GameOverMenu");
+    }
+
+    IEnumerator VictorySequence()
+    {
+        isVictory = true; // Set victory state
+        rb.velocity = Vector2.zero; // Stop physics movement
+        rb.gravityScale = 0; // Disable gravity (float effect)
+        DisableAttack(); // Reset attack states
+
+        yield return new WaitForSeconds(1.5f); // Wait for celebration/animation
+
+        // Switch scene
+        if (gameplaySystem != null) gameplaySystem.ExitScene("VictoryMenu");
     }
 }
