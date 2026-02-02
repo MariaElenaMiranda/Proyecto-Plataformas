@@ -426,6 +426,7 @@ MonoBehaviour:
   attackRadius: 2
   moveSpeed: 2
   reboundForce: 5
+  nextAttackTime: 2
   meleeAttackDamage: 2
   attackDamage: 10
   attackMoveSpeed: 10
@@ -442,7 +443,7 @@ MonoBehaviour:
   obstacleCheckRadius: 4.5
   jumpForce: 5
   jumpDistance: 1
-  jumpCooldown: 0.5
+  jumpCooldown: 3
   wallJumpHorizontalDistance: 3
   wallJumpHeight: 3.5
   wallJumpTime: 0.5
@@ -450,6 +451,8 @@ MonoBehaviour:
   maxJumpVelocityY: 9
   swordPrefab: {fileID: 6318612390972482522, guid: c4126d5b7f0943e40a91cb32382a1a07, type: 3}
   firePoint: {fileID: 7044346032481130031}
+  launchTime: 2
+  launchDelay: 8
 --- !u!61 &1698154904119500591
 BoxCollider2D:
   m_ObjectHideFlags: 0
