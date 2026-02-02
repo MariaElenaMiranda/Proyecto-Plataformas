@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 public class PowerupManareg : MonoBehaviour
 {
-    public float value = 0.25f;
-
+    public float value = 0.15f;
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))

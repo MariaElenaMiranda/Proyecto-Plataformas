@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SwordController : MonoBehaviour
@@ -7,7 +5,6 @@ public class SwordController : MonoBehaviour
     public float speed = 12f;
     public float damage = 15f;
     public float maxDistance;
-
     private Vector2 startPosition;
     private Rigidbody2D rb;
 
@@ -15,7 +12,6 @@ public class SwordController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         startPosition = transform.position;
-
         Destroy(gameObject, 5f);
     }
 
@@ -38,12 +34,10 @@ public class SwordController : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             PlayerTest player = collision.GetComponent<PlayerTest>();
-
             if (player != null)
             {
                 player.TakeDamage(transform.position, damage);
             }
-
             Destroy(gameObject);
         }
         else if (collision.CompareTag("ground"))

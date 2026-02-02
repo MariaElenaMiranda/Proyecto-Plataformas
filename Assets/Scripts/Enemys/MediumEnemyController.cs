@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class MediumEnemyController : MonoBehaviour
 {
@@ -25,9 +22,9 @@ public class MediumEnemyController : MonoBehaviour
     public float attackDelay = 3f;
     private float nextAttackTime = 0f;
     public float meleeAttackDamage = 2f;
-    public float attackDamage = 10f;
+    public float attackDamage = 7.5f;
 
-    public float live = 20f;
+    public float live = 25f;
     public float minFallSpeed = 10f;
     public float fallDamageMultiplier = 1.5f;
     private float maxFallSpeed;
