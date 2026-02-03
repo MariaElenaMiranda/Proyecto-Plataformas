@@ -28,6 +28,7 @@ public class HardEnemyController : MonoBehaviour
     public float fallDamageMultiplier = 1.5f;
     private float maxFallSpeed;
     private bool isDead;
+    public GameObject crate;
     private Animator animator;
     private bool takeDamage = false;
     public Transform groundCheck;
@@ -382,6 +383,10 @@ public class HardEnemyController : MonoBehaviour
     }
     public void DeleteBody()
     {
+        Vector2 position = new Vector2(transform.position.x, transform.position.y + 1);
+        crate = Instantiate(crate, position, transform.rotation);
+        crate.GetComponent<Crate>().qty = 10;
+        crate.GetComponent<Crate>().chance = 100;
         Destroy(gameObject);
     }
     private void OnDrawGizmosSelected()
