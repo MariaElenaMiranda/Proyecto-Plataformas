@@ -1,18 +1,24 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Crate : MonoBehaviour
 {
     public float life = 20f;
     public int chance = 80;
+    public int qty = 1;
     public GameObject[] powerupsList;
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("sword"))
         {
-            life -= 10; // no matter the player damage
+            life -= 10; // no matter the player damage always two hits
             if (life <= 0)
             {
-                GeneratePowerup();
+                for (int i = 0; i < qty; i++)
+                {
+                    GeneratePowerup();
+                }
                 Destroy(gameObject);
             }
         }

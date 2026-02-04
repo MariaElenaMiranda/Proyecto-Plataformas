@@ -12,6 +12,7 @@ public class EasyEnemyController : MonoBehaviour
     private bool isMoving;
     public float live = 20f;
     private bool isDead;
+    public GameObject crate;
     private Animator animator;
     private bool takeDamage = false;
     public float attackDamage = 5f;
@@ -143,6 +144,10 @@ public class EasyEnemyController : MonoBehaviour
         rb.velocity = Vector2.zero;
     }
     public void DeleteBody() {
+        Vector2 position = new Vector2(transform.position.x, transform.position.y + 1);
+        crate = Instantiate(crate, position, transform.rotation);
+        crate.GetComponent<Crate>().qty = 1;
+        crate.GetComponent<Crate>().chance = 100;
         Destroy(gameObject);
     }
 }

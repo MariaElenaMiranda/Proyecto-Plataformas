@@ -1,7 +1,7 @@
 using UnityEngine;
 public class PowerupHealing : MonoBehaviour
 {
-    public float value = 0.20f;
+    public float value = 0.11f;
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))

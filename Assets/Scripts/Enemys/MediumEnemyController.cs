@@ -44,6 +44,8 @@ public class MediumEnemyController : MonoBehaviour
     private Animator animator;
     private bool takeDamage = false;
     private bool playerAlive;
+    public GameObject crate;
+
 
     [Header("Sound Effects")]
     public AudioSource soundEffects; // Reference to the speaker
@@ -54,6 +56,7 @@ public class MediumEnemyController : MonoBehaviour
         playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        player = GameObject.Find("humanFin").GetComponent<Transform>();
 
         // Find the AudioSource component attached to this object
         soundEffects = GetComponent<AudioSource>();
@@ -67,10 +70,8 @@ public class MediumEnemyController : MonoBehaviour
         {
             Movement();
         }
-
         UpdateGroundedState();
         UpdateFallState();
-
         animator.SetBool("isDead", isDead);
         animator.SetBool("isAttacking", isAttacking);
 
@@ -81,11 +82,9 @@ public class MediumEnemyController : MonoBehaviour
 
     private void Movement() {
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
-
         if (hasAnyGround && !isGrounded)
         {
             float facing = Mathf.Sign(transform.localScale.x);
-
             if (frontGrounded && !backGrounded)
             {
                 movementX = -facing;
@@ -97,7 +96,6 @@ public class MediumEnemyController : MonoBehaviour
                 return;
             }
         }
-
         if (distanceToPlayer < attackRadius)
         {
             Attack();
@@ -106,7 +104,6 @@ public class MediumEnemyController : MonoBehaviour
         else if (distanceToPlayer < detectionRadius && distanceToPlayer > attackRadius)
         {
             Vector2 direction = (player.position - transform.position).normalized;
-
             if (direction.x < 0)
             {
                 transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
@@ -115,7 +112,6 @@ public class MediumEnemyController : MonoBehaviour
             {
                 transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
             }
-
             if (isGrounded && playerAlive && !isDead)
             {
                 movementX = direction.x;
@@ -230,7 +226,6 @@ public class MediumEnemyController : MonoBehaviour
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(groundCheckBehind.position, groundCheckBehind.position + Vector3.down * groundCheckDistance);
         }
-
     }
 
     public void Attack() {
@@ -256,11 +251,9 @@ public class MediumEnemyController : MonoBehaviour
     private void ApplyFallDamage()
     {
         float fallSpeed = Mathf.Abs(maxFallSpeed);
-
         if (fallSpeed >= minFallSpeed)
         {
             float damage = (fallSpeed - minFallSpeed) * fallDamageMultiplier;
-
             TakeDamage(new Vector2(transform.position.x, 0), damage);
         }
     }
@@ -298,7 +291,12 @@ public class MediumEnemyController : MonoBehaviour
         isAttacking = false;
     }
 
-    public void DeleteBody() {
+    public void DeleteBody()
+    {
+        Vector2 position = new Vector2(transform.position.x, transform.position.y + 1);
+        crate = Instantiate(crate, position, transform.rotation);
+        crate.GetComponent<Crate>().qty = 3;
+        crate.GetComponent<Crate>().chance = 100;
         Destroy(gameObject);
     }
 }

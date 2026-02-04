@@ -20,7 +20,7 @@ public class BossEnemyController : MonoBehaviour
     public float meleeAttackDamage = 5f;
     public float attackDamage = 10f;
     public float attackMoveSpeed = 15.0f;
-    public float attackDelay = 1f;
+    public float attackDelay = 2f;
     public float live = 150f;
     public float minFallSpeed = 10f;
     public float fallDamageMultiplier = 1.5f;
@@ -68,13 +68,13 @@ public class BossEnemyController : MonoBehaviour
         playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        player = GameObject.Find("Player").GetComponent<PlayerTest>().transform;
 
         // Find the AudioSource component attached to this object
         soundEffects = GetComponent<AudioSource>();
         // If it doesn't exist, create one automatically
         if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
     }
-
     void Update()
     {
         animator.SetBool("isDead", isDead);
@@ -90,7 +90,6 @@ public class BossEnemyController : MonoBehaviour
         if (isAttacking || !playerAlive || isDead || takeDamage) return;
         Movement();
     }
-
     private void Movement() {
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         float horizontalDistance = Mathf.Abs(player.position.x - transform.position.x);
@@ -331,17 +330,6 @@ public class BossEnemyController : MonoBehaviour
             maxFallSpeed = Mathf.Max(maxFallSpeed, Mathf.Abs(rb.velocity.y));
         }
     }
-
-    //private void ApplyFallDamage()
-    //{
-    //    float fallSpeed = Mathf.Abs(maxFallSpeed);
-    //    if (fallSpeed >= minFallSpeed && !isAttacking)
-    //    {
-    //        float damage = (fallSpeed - minFallSpeed) * fallDamageMultiplier;
-    //        TakeDamage(new Vector2(transform.position.x, 0), damage);
-    //    }
-    //}
-
     public void Attack()
     {
         if (isAttacking ||Time.time < nextAttackTime ||takeDamage ||!playerAlive) return;

@@ -196,12 +196,13 @@ MonoBehaviour:
   live: 25
   minFallSpeed: 10
   fallDamageMultiplier: 1.5
-  groundCheck: {fileID: 0}
-  groundCheckBehind: {fileID: 0}
+  crate: {fileID: 426560801615406542, guid: 1e28a9a74e6ce4b1589e73d4731efce9, type: 3}
+  groundCheck: {fileID: 1936786448698152866}
+  groundCheckBehind: {fileID: 2814306467748131606}
   groundCheckDistance: 0.5
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
 --- !u!61 &2980701961847657786
 BoxCollider2D:
   m_ObjectHideFlags: 0

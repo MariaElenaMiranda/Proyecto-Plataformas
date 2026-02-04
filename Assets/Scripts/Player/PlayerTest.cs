@@ -18,14 +18,14 @@ public class PlayerTest : MonoBehaviour
     private float defaultGravity;
     [Header("Mana Configuration")]
     public float mana = 100f;
-    public float manaRegenPercent = 75f;
+    public float manaRegenValue = 0.4f;
     public float maxMana = 100f;
     public float basicAttackManaCost = 4f;
     public float powerAttackManaMultiplier = 2f;
     public float PowerAttackManaCost => basicAttackManaCost * powerAttackManaMultiplier;
     [Header("Life Configuration")]
     public float live = 100f;
-    public float liveRegenPercent = 50f;
+    public float liveRegenValue = 0.45f;
     public float maxLive = 100f;
     [Header("Attack Configuration")]
     public float attackDamage = 7;
@@ -158,7 +158,7 @@ public class PlayerTest : MonoBehaviour
     {
         if (!isAttacking && mana < maxMana && !takeDamage)
         {
-            mana += (manaRegenPercent / 100) * Time.deltaTime;
+            mana += manaRegenValue * Time.deltaTime;
             if (mana > maxMana)
             {
                 mana = maxMana;
@@ -170,7 +170,7 @@ public class PlayerTest : MonoBehaviour
     {
         if (!isAttacking && live < maxLive && !takeDamage && !isDead)
         {
-            live += (liveRegenPercent / 100) * Time.deltaTime;
+            live += liveRegenValue * Time.deltaTime;
             if (live > maxLive)
             {
                 live = maxLive;
@@ -291,12 +291,12 @@ public class PlayerTest : MonoBehaviour
     public void IncreaseLifeRegen(float percent)
     {
         LifePowerUpQty++;
-        this.liveRegenPercent += this.liveRegenPercent * percent;
+        this.liveRegenValue += this.liveRegenValue * percent;
     }
     public void IncreaseManaRegen(float percent)
     {
         ManaPowerUpQty++;
-        this.manaRegenPercent += this.manaRegenPercent * percent;
+        this.manaRegenValue += this.manaRegenValue * percent;
     }
     public void IncreaseAttackDamage(float percent)
     {
