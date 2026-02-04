@@ -119,6 +119,7 @@ public class PlayerTest : MonoBehaviour
         }
 
         animator.SetFloat("movement", Mathf.Abs(moveInput));
+        animator.SetFloat("runSpeed", Mathf.Abs(moveSpeed/4));
 
         if (moveInput < 0)
         {
