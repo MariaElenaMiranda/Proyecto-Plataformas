@@ -56,11 +56,17 @@ public class HardEnemyController : MonoBehaviour
     private bool canJumpToPlayer;
     private bool playerAlive;
 
+    public EnemyHealthController healthBar;
+    private float maxLife;
+
     void Start()
     {
         playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        maxLife = live;
+        healthBar.SetMaxLife(maxLife);
     }
     void Update()
     {
@@ -345,11 +351,13 @@ public class HardEnemyController : MonoBehaviour
             takeDamage = true;
             animator.SetTrigger("hit");
             live -= amountDamage;
+            healthBar.UpdateLife(live);
             if (live <= 0)
             {
                 isDead = true;
                 isAttacking = false;
                 rb.velocity = new Vector2(0, rb.velocity.y);
+                healthBar.gameObject.SetActive(false);
             }
             else
             {

@@ -42,12 +42,18 @@ public class MediumEnemyController : MonoBehaviour
 
     private bool playerAlive;
 
+    public EnemyHealthController healthBar;
+    private float maxLife;
+
     void Start()
     {
         playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         player = GameObject.Find("humanFin").GetComponent<Transform>();
+
+        maxLife = live;
+        healthBar.SetMaxLife(maxLife);
     }
     void Update()
     {
@@ -242,10 +248,12 @@ public class MediumEnemyController : MonoBehaviour
             takeDamage = true;
             animator.SetTrigger("hit");
             live -= amountDamage;
+            healthBar.UpdateLife(live);
             if (live <= 0)
             {
                 isDead = true;
                 isAttacking = false;
+                healthBar.gameObject.SetActive(false);
             }
             else
             {

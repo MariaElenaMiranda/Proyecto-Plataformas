@@ -21,11 +21,17 @@ public class EasyEnemyController : MonoBehaviour
     public LayerMask groundLayer;
     private bool playerAlive;
 
+    public EnemyHealthController healthBar;
+    private float maxLife;
+
     void Start()
     {
         playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        maxLife = live;
+        healthBar.SetMaxLife(maxLife);
     }
     void Update()
     {
@@ -124,10 +130,12 @@ public class EasyEnemyController : MonoBehaviour
         {
             takeDamage = true;
             live -= amountDamage;
+            healthBar.UpdateLife(live);
             if (live <= 0)
             {
                 isDead = true;
                 isMoving = false;
+                healthBar.gameObject.SetActive(false);
             }
             else
             {

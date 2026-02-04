@@ -86,10 +86,16 @@ public class PlayerTest : MonoBehaviour
 
         if (!takeDamage)
         {
-            if (moveInput != 0 && Input.GetKey(KeyCode.LeftShift) && mana >= 2) {
+            if (moveInput != 0 && Input.GetKey(KeyCode.LeftShift) && mana >= 2)
+            {
                 sprint = true;
+                animator.speed = moveSpeed/2;
             }
-            else sprint = false;
+            else
+            {
+                sprint = false;
+                animator.speed = 1f;
+            }
 
             if (sprint) playerMovement = moveSprint;
             else playerMovement = moveSpeed;
