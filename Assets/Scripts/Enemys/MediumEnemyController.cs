@@ -3,58 +3,64 @@ using UnityEngine;
 
 public class MediumEnemyController : MonoBehaviour
 {
-
+    [Header("Target Configuration")]
     public Transform player;
 
+    [Header("Stats")]
     public float detectionRadius = 5f;
     public float attackRadius = 3.5f;
     public float moveSpeed = 2.0f;
     public float reboundForce = 5f;
+    public float live = 25f;
 
-    private Rigidbody2D rb;
-    private float movementX;
-
-    private bool isGrounded;
-    private bool wasGrounded;
-    private bool isFalling;
-
-    private bool isAttacking;
+    [Header("Attack Configuration")]
     public float attackDelay = 3f;
-    private float nextAttackTime = 0f;
     public float meleeAttackDamage = 2f;
     public float attackDamage = 7.5f;
+    private float nextAttackTime = 0f;
 
-    public float live = 25f;
+    [Header("Fall & Damage Settings")]
     public float minFallSpeed = 10f;
     public float fallDamageMultiplier = 1.5f;
     private float maxFallSpeed;
 
-    private bool isDead;
-
-    private Animator animator;
-    private bool takeDamage = false;
-    
+    [Header("Ground Detection")]
     public Transform groundCheck;
     public Transform groundCheckBehind;
     private bool frontGrounded;
     private bool backGrounded;
     private bool hasAnyGround;
-
     public float groundCheckDistance = 0.5f;
     public LayerMask groundLayer;
 
+    [Header("Internal Variables")]
+    private Rigidbody2D rb;
+    private float movementX;
+    private bool isGrounded;
+    private bool wasGrounded;
+    private bool isFalling;
+    private bool isAttacking;
+    private bool isDead;
+    private Animator animator;
+    private bool takeDamage = false;
     private bool playerAlive;
 
+    [Header("Sound Effects")]
+    public AudioSource soundEffects; // Reference to the speaker
+    public AudioClip attackSound; // The sound file to play
 
-    // Start is called before the first frame update
     void Start()
     {
         playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        // Find the AudioSource component attached to this object
+        soundEffects = GetComponent<AudioSource>();
+        // If it doesn't exist, create one automatically
+        if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (playerAlive && !isDead)
@@ -67,12 +73,10 @@ public class MediumEnemyController : MonoBehaviour
 
         animator.SetBool("isDead", isDead);
         animator.SetBool("isAttacking", isAttacking);
-        
+
         animator.SetBool("isGrounded", hasAnyGround);
         animator.SetFloat("verticalSpeed", rb.velocity.y);
         animator.SetFloat("speed", Mathf.Abs(movementX));
-
-
     }
 
     private void Movement() {
@@ -119,13 +123,11 @@ public class MediumEnemyController : MonoBehaviour
             else
             {
                 movementX = 0;
-               
             }
         }
         else
         {
             movementX = 0;
-           
         }
     }
 
@@ -136,18 +138,17 @@ public class MediumEnemyController : MonoBehaviour
             Vector2 damageDirection = new Vector2(transform.position.x, 0);
 
             PlayerTest playerScript = collision.gameObject.GetComponent<PlayerTest>();
-            if (isAttacking) { 
+            if (isAttacking) {
                 playerScript.TakeDamage(damageDirection, attackDamage * meleeAttackDamage);
             }
-            else { 
+            else {
                 playerScript.TakeDamage(damageDirection, attackDamage);
             }
 
             playerAlive = !playerScript.isDead;
 
-            if (!playerAlive) { 
+            if (!playerAlive) {
                 movementX = 0;
-                
             }
         }
     }
@@ -171,9 +172,8 @@ public class MediumEnemyController : MonoBehaviour
             rb.velocity = Vector2.zero;
             return;
         }
-        if (!takeDamage && hasAnyGround) { 
+        if (!takeDamage && hasAnyGround) {
             rb.velocity = new Vector2(movementX * moveSpeed, rb.velocity.y);
-   
         }
     }
 
@@ -214,7 +214,6 @@ public class MediumEnemyController : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
 
@@ -235,13 +234,22 @@ public class MediumEnemyController : MonoBehaviour
     }
 
     public void Attack() {
-        
         if (isGrounded && !isFalling && Time.time >= nextAttackTime && !takeDamage)
         {
             movementX = 0;
             isAttacking = true;
             StartCoroutine(PerformAttack());
             nextAttackTime = Time.time + attackDelay;
+        }
+    }
+
+    public void PlayAttackSound() // Method called by Animation Event
+    {
+        // Check if sound and speaker exist
+        if (attackSound != null && soundEffects != null)
+        {
+            soundEffects.pitch = Random.Range(0.8f, 1.2f); // Randomize pitch slightly for realism
+            soundEffects.PlayOneShot(attackSound); // Play the sound once
         }
     }
 
@@ -266,8 +274,7 @@ public class MediumEnemyController : MonoBehaviour
             live -= amountDamage;
             if (live <= 0)
             {
-                isDead = true;  
-                
+                isDead = true;
                 isAttacking = false;
             }
             else
@@ -283,17 +290,15 @@ public class MediumEnemyController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         takeDamage = false;
-        
     }
 
     IEnumerator PerformAttack()
     {
-        
         yield return new WaitForSeconds(0.5f);
         isAttacking = false;
     }
 
-    public void DeleteBody() { 
+    public void DeleteBody() {
         Destroy(gameObject);
     }
 }
