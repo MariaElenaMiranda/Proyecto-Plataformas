@@ -40,10 +40,10 @@ public class AvatarController : MonoBehaviour
     void Update()
     {
         lifeQty.text = player.LifePowerUpQty.ToString();
-        lifeRegen.text = $"{(player.liveRegenPercent.ToString()):F2}";
+        lifeRegen.text = $"{(player.liveRegenValue.ToString()):F2}";
 
         manaQty.text = player.ManaPowerUpQty.ToString();
-        manaRegen.text = $"{(player.manaRegenPercent.ToString()):F2}";
+        manaRegen.text = $"{(player.manaRegenValue.ToString()):F2}";
 
         attackQty.text = player.AttackPowerUpQty.ToString();
         totalAttack.text = $"{(player.attackDamage.ToString()):F2}";

@@ -385,7 +385,7 @@ public class HardEnemyController : MonoBehaviour
     {
         Vector2 position = new Vector2(transform.position.x, transform.position.y + 1);
         crate = Instantiate(crate, position, transform.rotation);
-        crate.GetComponent<Crate>().qty = 10;
+        crate.GetComponent<Crate>().qty = 7;
         crate.GetComponent<Crate>().chance = 100;
         Destroy(gameObject);
     }

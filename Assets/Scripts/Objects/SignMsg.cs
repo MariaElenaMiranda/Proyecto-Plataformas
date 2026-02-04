@@ -7,7 +7,6 @@ public class SignMsg : MonoBehaviour
     [Multiline]
     public string message; // = "";
     public float visibleTime = 3f;
-
     private TextMeshProUGUI textMesh;
 
     public void Start()

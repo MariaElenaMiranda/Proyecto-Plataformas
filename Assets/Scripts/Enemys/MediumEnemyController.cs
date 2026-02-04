@@ -272,7 +272,7 @@ public class MediumEnemyController : MonoBehaviour
     {
         Vector2 position = new Vector2(transform.position.x, transform.position.y + 1);
         crate = Instantiate(crate, position, transform.rotation);
-        crate.GetComponent<Crate>().qty = 5;
+        crate.GetComponent<Crate>().qty = 3;
         crate.GetComponent<Crate>().chance = 100;
         Destroy(gameObject);
     }

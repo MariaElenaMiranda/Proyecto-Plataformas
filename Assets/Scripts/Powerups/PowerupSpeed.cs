@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PowerupSpeed : MonoBehaviour
 {
-    public float value = 0.05f;
+    public float value = 0.025f;
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
