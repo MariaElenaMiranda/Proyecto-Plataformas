@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PowerupAttack : MonoBehaviour
 {
-    public float value = 0.15f;
+    public float value = 0.05f;
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
