@@ -58,12 +58,18 @@ public class BossEnemyController : MonoBehaviour
     public float launchTime = 2f;
     public float launchDelay = 5f;
 
+    public EnemyHealthController healthBar;
+    private float maxLife;
+
     void Start()
     {
         playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         player = GameObject.Find("Player").GetComponent<PlayerTest>().transform;
+
+        maxLife = live;
+        healthBar.SetMaxLife(maxLife);
     }
     void Update()
     {
@@ -351,14 +357,15 @@ public class BossEnemyController : MonoBehaviour
             takeDamage = true;
             animator.SetTrigger("hit");
             live -= amountDamage;
+            healthBar.UpdateLife(live);
             if (live <= 0)
             {
                 isDead = true;
                 isAttacking = false;
                 rb.velocity = new Vector2(0, rb.velocity.y);
-
+                healthBar.gameObject.SetActive(false);
                 //Trigger Victory
-                if(player != null)
+                if (player != null)
                 {
                     // Access Player script and trigger WinGame directly
                     player.GetComponent<PlayerTest>().WinGame();
