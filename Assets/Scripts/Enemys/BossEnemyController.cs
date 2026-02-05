@@ -58,7 +58,7 @@ public class BossEnemyController : MonoBehaviour
     public float launchTime = 2f;
     public float launchDelay = 5f;
 
-    [Header("Audio SFX")]
+    [Header("Audio Settings")]
     public AudioSource soundEffects; // The speaker component
     public AudioClip meleeSound;  // Sword swing sound
     public AudioClip throwSound;  // Whoosh sound
@@ -77,12 +77,12 @@ public class BossEnemyController : MonoBehaviour
         animator = GetComponent<Animator>();
         player = GameObject.Find("HumanFinn").GetComponent<PlayerTest>().transform;
 
-        
         // Find the AudioSource component attached to this object
         soundEffects = GetComponent<AudioSource>();
         // If it doesn't exist, create one automatically
         if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
-      
+        if (meleeSound == null ) meleeSound = Resources.Load<AudioClip>("Audio/BossSounds/SwordBoss");
+        if (throwSound == null ) throwSound = Resources.Load<AudioClip>("Audio/BossSounds/ShootBoss");
     }
     void Update()
     {

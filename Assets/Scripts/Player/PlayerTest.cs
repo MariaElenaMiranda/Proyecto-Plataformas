@@ -66,6 +66,8 @@ public class PlayerTest : MonoBehaviour
         soundEffects = GetComponent<AudioSource>();
         // If it doesn't exist, create one automatically
         if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
+
+        if (attackSound == null ) attackSound = Resources.Load<AudioClip>("Audio/PlayerSounds/SwordFinn");
     }
     void Update()
     {
