@@ -12,6 +12,7 @@ public class EnemyHealthController : MonoBehaviour
     {
         maxLife = life;
         fillImage.fillAmount = 1f;
+        Debug.Log("Como esta la maxLife: " + maxLife);
     }
 
     public void UpdateLife(float currentLife)

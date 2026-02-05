@@ -98,7 +98,7 @@ Transform:
   m_Children:
   - {fileID: 1936786448698152866}
   - {fileID: 2814306467748131606}
-  - {fileID: 5665361371866879804}
+  - {fileID: 1599765642325648365}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8675653667614404584
@@ -204,7 +204,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  healthBar: {fileID: 7879630844087239009}
+  healthBar: {fileID: 3888568864612660656}
 --- !u!61 &2980701961847657786
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -277,7 +277,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!1001 &2897105115206889658
+--- !u!1001 &8113374943153357931
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -319,11 +319,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7398285977347155846, guid: ac2980043510a644897c24b10a9c4de2, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 914
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7398285977347155846, guid: ac2980043510a644897c24b10a9c4de2, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 514
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 7398285977347155846, guid: ac2980043510a644897c24b10a9c4de2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -355,11 +355,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7398285977347155846, guid: ac2980043510a644897c24b10a9c4de2, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.05
+      value: 0.0010070801
       objectReference: {fileID: 0}
     - target: {fileID: 7398285977347155846, guid: ac2980043510a644897c24b10a9c4de2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.81
+      value: 0.78900146
       objectReference: {fileID: 0}
     - target: {fileID: 7398285977347155846, guid: ac2980043510a644897c24b10a9c4de2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -378,15 +378,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac2980043510a644897c24b10a9c4de2, type: 3}
---- !u!224 &5665361371866879804 stripped
+--- !u!224 &1599765642325648365 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7398285977347155846, guid: ac2980043510a644897c24b10a9c4de2, type: 3}
-  m_PrefabInstance: {fileID: 2897105115206889658}
+  m_PrefabInstance: {fileID: 8113374943153357931}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7879630844087239009 stripped
+--- !u!114 &3888568864612660656 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5003084951912427995, guid: ac2980043510a644897c24b10a9c4de2, type: 3}
-  m_PrefabInstance: {fileID: 2897105115206889658}
+  m_PrefabInstance: {fileID: 8113374943153357931}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1

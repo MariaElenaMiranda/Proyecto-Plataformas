@@ -61,12 +61,13 @@ public class HardEnemyController : MonoBehaviour
 
     void Start()
     {
-        playerAlive= true;
+        maxLife = live;
+        healthBar.SetMaxLife(maxLife);
+        playerAlive = true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
-        maxLife = live;
-        healthBar.SetMaxLife(maxLife);
+       
     }
     void Update()
     {

@@ -47,13 +47,14 @@ public class MediumEnemyController : MonoBehaviour
 
     void Start()
     {
-        playerAlive= true;
+        maxLife = live;
+        healthBar.SetMaxLife(maxLife);
+        playerAlive = true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         player = GameObject.Find("humanFin").GetComponent<Transform>();
 
-        maxLife = live;
-        healthBar.SetMaxLife(maxLife);
+        
     }
     void Update()
     {

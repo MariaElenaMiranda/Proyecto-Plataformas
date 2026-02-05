@@ -40,7 +40,7 @@ public class SwordController : MonoBehaviour
             }
             Destroy(gameObject);
         }
-        else if (collision.CompareTag("ground"))
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("ground"))
         {
             Destroy(gameObject);
         }
