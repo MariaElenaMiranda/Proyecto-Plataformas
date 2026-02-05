@@ -10,7 +10,7 @@ public class EasyEnemyController : MonoBehaviour
     private Rigidbody2D rb;
     private float movementX;
     private bool isMoving;
-    public float live = 20f;
+    public float live = 25f;
     private bool isDead;
     public GameObject crate;
     private Animator animator;
@@ -30,7 +30,7 @@ public class EasyEnemyController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         player = GameObject.Find("HumanFinn").GetComponent<Transform>();
-
+        groundLayer = LayerMask.GetMask("ground");
         maxLife = live;
         healthBar.SetMaxLife(maxLife);
     }

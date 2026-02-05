@@ -434,7 +434,7 @@ MonoBehaviour:
   attackDamage: 10
   attackMoveSpeed: 10
   attackDelay: 2
-  live: 50
+  live: 120
   minFallSpeed: 10
   fallDamageMultiplier: 1.5
   groundCheck: {fileID: 5848365320607231674}

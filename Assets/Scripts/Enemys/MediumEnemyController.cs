@@ -11,7 +11,7 @@ public class MediumEnemyController : MonoBehaviour
     public float attackRadius = 3.5f;
     public float moveSpeed = 2.0f;
     public float reboundForce = 5f;
-    public float live = 25f;
+    public float live = 40f;
 
     [Header("Attack Configuration")]
     public float attackDelay = 3f;
@@ -67,8 +67,7 @@ public class MediumEnemyController : MonoBehaviour
         soundEffects = GetComponent<AudioSource>();
         // If it doesn't exist, create one automatically
         if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
-
-        
+        if (attackSound == null ) attackSound = Resources.Load<AudioClip>("Audio/EnemySound/PunchCrab");
     }
 
     void Update()

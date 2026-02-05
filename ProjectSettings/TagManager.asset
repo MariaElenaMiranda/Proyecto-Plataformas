@@ -7,6 +7,7 @@ TagManager:
   - sword
   - BottomLimit
   - BossSword
+  - Decoration
   layers:
   - Default
   - TransparentFX
@@ -18,8 +19,8 @@ TagManager:
   - 
   - 
   - 
-  - back_decotarion
-  - front_decoration
+  - Decoration
+  - 
   - 
   - 
   - 
