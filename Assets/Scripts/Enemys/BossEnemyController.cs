@@ -62,6 +62,8 @@ public class BossEnemyController : MonoBehaviour
     public AudioSource soundEffects; // The speaker component
     public AudioClip meleeSound;  // Sword swing sound
     public AudioClip throwSound;  // Whoosh sound
+    public EnemyHealthController healthBar;
+    private float maxLife;
 
     void Start()
     {
@@ -74,6 +76,8 @@ public class BossEnemyController : MonoBehaviour
         soundEffects = GetComponent<AudioSource>();
         // If it doesn't exist, create one automatically
         if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
+        maxLife = live;
+        healthBar.SetMaxLife(maxLife);
     }
     void Update()
     {
@@ -377,14 +381,15 @@ public class BossEnemyController : MonoBehaviour
             takeDamage = true;
             animator.SetTrigger("hit");
             live -= amountDamage;
+            healthBar.UpdateLife(live);
             if (live <= 0)
             {
                 isDead = true;
                 isAttacking = false;
                 rb.velocity = new Vector2(0, rb.velocity.y);
-
+                healthBar.gameObject.SetActive(false);
                 //Trigger Victory
-                if(player != null)
+                if (player != null)
                 {
                     // Access Player script and trigger WinGame directly
                     player.GetComponent<PlayerTest>().WinGame();

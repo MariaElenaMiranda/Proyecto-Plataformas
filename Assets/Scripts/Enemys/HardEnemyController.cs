@@ -59,6 +59,8 @@ public class HardEnemyController : MonoBehaviour
     [Header("Sound Effects")]
     public AudioSource soundEffects; // The sound file to play
     public AudioClip attackSound; // The sound file to play
+    public EnemyHealthController healthBar;
+    private float maxLife;
 
     void Start()
     {
@@ -71,6 +73,9 @@ public class HardEnemyController : MonoBehaviour
         soundEffects = GetComponent<AudioSource>();
         // If it doesn't exist, create one automatically
         if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
+
+        maxLife = live;
+        healthBar.SetMaxLife(maxLife);
     }
     void Update()
     {
@@ -366,11 +371,13 @@ public class HardEnemyController : MonoBehaviour
             takeDamage = true;
             animator.SetTrigger("hit");
             live -= amountDamage;
+            healthBar.UpdateLife(live);
             if (live <= 0)
             {
                 isDead = true;
                 isAttacking = false;
                 rb.velocity = new Vector2(0, rb.velocity.y);
+                healthBar.gameObject.SetActive(false);
             }
             else
             {
