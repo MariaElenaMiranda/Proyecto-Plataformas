@@ -50,6 +50,10 @@ public class PlayerTest : MonoBehaviour
     public Animator animator;
     public GameplaySystem gameplaySystem; // Reference to change scenes
 
+    [Header("Sound Effects")]
+    public AudioSource soundEffects; // The sound file to play
+    public AudioClip attackSound; // The sound file to play
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -57,6 +61,11 @@ public class PlayerTest : MonoBehaviour
         gameplaySystem = GameObject.Find("GameplayManager").GetComponent<GameplaySystem>();
         animator = GameObject.Find("HumanFinn").GetComponent<Animator>();
         groundLayer = LayerMask.GetMask("ground");
+
+        // Find the AudioSource component attached to this object
+        soundEffects = GetComponent<AudioSource>();
+        // If it doesn't exist, create one automatically
+        if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
     }
     void Update()
     {
@@ -227,6 +236,17 @@ public class PlayerTest : MonoBehaviour
         isAttacking = false;
         attackDamage = originalDamage;
     }
+
+    public void PlayAttackSound() // Method called by Animation Event
+    {
+        // Check if sound and speaker exist
+        if (attackSound != null && soundEffects != null)
+        {
+            soundEffects.pitch = Random.Range(0.8f, 1.2f); // Randomize pitch slightly for realism
+            soundEffects.PlayOneShot(attackSound); // Play the sound once
+        }
+    }
+
 
     private void Gravity()
     {

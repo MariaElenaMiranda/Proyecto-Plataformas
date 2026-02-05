@@ -29,6 +29,7 @@ public class EasyEnemyController : MonoBehaviour
         playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        player = GameObject.Find("HumanFinn").GetComponent<Transform>();
 
         maxLife = live;
         healthBar.SetMaxLife(maxLife);
