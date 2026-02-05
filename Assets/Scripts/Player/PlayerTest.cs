@@ -20,8 +20,8 @@ public class PlayerTest : MonoBehaviour
     public float mana = 100f;
     public float manaRegenValue = 0.4f;
     public float maxMana = 100f;
-    public float basicAttackManaCost = 4f;
-    public float powerAttackManaMultiplier = 2f;
+    public float basicAttackManaCost = 2.5f;
+    public float powerAttackManaMultiplier = 2.5f;
     public float PowerAttackManaCost => basicAttackManaCost * powerAttackManaMultiplier;
     [Header("Life Configuration")]
     public float live = 100f;
