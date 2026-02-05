@@ -75,7 +75,7 @@ public class BossEnemyController : MonoBehaviour
         playerAlive = true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        player = GameObject.Find("Player").GetComponent<PlayerTest>().transform;
+        player = GameObject.Find("HumanFinn").GetComponent<PlayerTest>().transform;
 
         
         // Find the AudioSource component attached to this object
