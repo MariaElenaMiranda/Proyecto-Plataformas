@@ -56,7 +56,7 @@ public class MediumEnemyController : MonoBehaviour
         playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        player = GameObject.Find("humanFin").GetComponent<Transform>();
+        player = GameObject.Find("HumanFinn").GetComponent<Transform>();
 
         // Find the AudioSource component attached to this object
         soundEffects = GetComponent<AudioSource>();
