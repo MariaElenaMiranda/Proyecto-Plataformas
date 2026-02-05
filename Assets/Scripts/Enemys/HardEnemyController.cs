@@ -19,11 +19,11 @@ public class HardEnemyController : MonoBehaviour
     private bool isAttacking;
     private float nextAttackTime = 0f;
     public float meleeAttackDamage = 2f;
-    public float attackDamage = 6.5f;
+    public float attackDamage = 7.5f;
     public float attackMoveSpeed = 10.0f;
-    public float dashDuration = 0.8f;
+    public float dashDuration = 0.6f;
     public float attackDelay = 5f;
-    public float live = 40f;
+    public float live = 60f;
     public float minFallSpeed = 10f;
     public float fallDamageMultiplier = 1.5f;
     private float maxFallSpeed;
@@ -75,8 +75,7 @@ public class HardEnemyController : MonoBehaviour
         soundEffects = GetComponent<AudioSource>();
         // If it doesn't exist, create one automatically
         if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
-
-       
+        if (attackSound == null ) attackSound = Resources.Load<AudioClip>("Audio/EnemySound/PunchPinkStar");
     }
     void Update()
     {

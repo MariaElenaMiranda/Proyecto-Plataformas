@@ -178,7 +178,7 @@ MonoBehaviour:
   detectionRadius: 5
   moveSpeed: 2
   reboundForce: 5
-  live: 30
+  live: 25
   crate: {fileID: 426560801615406542, guid: 1e28a9a74e6ce4b1589e73d4731efce9, type: 3}
   attackDamage: 5
   groundCheck: {fileID: 0}

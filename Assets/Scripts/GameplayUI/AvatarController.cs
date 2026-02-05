@@ -5,6 +5,7 @@ public class AvatarController : MonoBehaviour
 {
     [Header("Player")]
     public PlayerTest player;
+    public TextMeshProUGUI level; // level = all active powerups
     [Header("Life")]
     public int LifeRegPowerup = 0;
     public TextMeshProUGUI lifeQty;
@@ -24,6 +25,7 @@ public class AvatarController : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("HumanFinn").GetComponent<PlayerTest>();
+        level = GameObject.Find("Level").GetComponent<TextMeshProUGUI>();
 
         lifeQty = GameObject.Find("lifeQty").GetComponent<TextMeshProUGUI>();
         lifeRegen = GameObject.Find("lifeStat").GetComponent<TextMeshProUGUI>();
@@ -39,6 +41,9 @@ public class AvatarController : MonoBehaviour
     }
     void Update()
     {
+        int activePowerups = player.LifePowerUpQty + player.ManaPowerUpQty + player.AttackPowerUpQty + player.SpeedPowerUpQty;
+        level.text = activePowerups.ToString("0.####");
+
         lifeQty.text = player.LifePowerUpQty.ToString();
         lifeRegen.text = player.liveRegenValue.ToString("0.####");
 

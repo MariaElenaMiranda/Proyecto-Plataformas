@@ -4,8 +4,8 @@ using UnityEngine;
 public class BossEnemyController : MonoBehaviour
 {
     public Transform player;
-    public float detectionRadius = 5f;
-    public float attackRadius = 3.5f;
+    public float detectionRadius = 15f;
+    public float attackRadius = 2f;
     public float moveSpeed = 2.0f;
     public float reboundForce = 5f;
     private Rigidbody2D rb;
@@ -21,7 +21,7 @@ public class BossEnemyController : MonoBehaviour
     public float attackDamage = 10f;
     public float attackMoveSpeed = 15.0f;
     public float attackDelay = 2f;
-    public float live = 150f;
+    public float live = 120f;
     public float minFallSpeed = 10f;
     public float fallDamageMultiplier = 1.5f;
     private float maxFallSpeed;
@@ -32,10 +32,10 @@ public class BossEnemyController : MonoBehaviour
     public Transform groundCheckBehind;
     public float groundCheckDistance = 0.5f;
     public LayerMask groundLayer;
-    public float obstacleCheckRadius = 1.5f;
+    public float obstacleCheckRadius = 4.5f;
     public float jumpForce = 5f;
     public float jumpDistance = 1.0f;
-    public float jumpCooldown = 0.5f;
+    public float jumpCooldown = 3f;
     private float nextJumpTime = 0f;
     private float directionX;
     private RaycastHit2D hitWall;

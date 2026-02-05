@@ -184,9 +184,9 @@ MonoBehaviour:
   meleeAttackDamage: 2
   attackDamage: 7.5
   attackMoveSpeed: 10
-  dashDuration: 0.8
+  dashDuration: 0.6
   attackDelay: 3
-  live: 40
+  live: 60
   minFallSpeed: 10
   fallDamageMultiplier: 1.5
   crate: {fileID: 426560801615406542, guid: 1e28a9a74e6ce4b1589e73d4731efce9, type: 3}

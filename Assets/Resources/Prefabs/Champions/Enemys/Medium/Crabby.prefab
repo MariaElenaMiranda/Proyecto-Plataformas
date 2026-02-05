@@ -192,7 +192,7 @@ MonoBehaviour:
   attackRadius: 3.5
   moveSpeed: 2
   reboundForce: 5
-  live: 25
+  live: 40
   attackDelay: 3
   meleeAttackDamage: 2
   attackDamage: 7.5
