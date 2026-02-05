@@ -58,6 +58,10 @@ public class BossEnemyController : MonoBehaviour
     public float launchTime = 2f;
     public float launchDelay = 5f;
 
+    [Header("Audio SFX")]
+    public AudioSource soundEffects; // The speaker component
+    public AudioClip meleeSound;  // Sword swing sound
+    public AudioClip throwSound;  // Whoosh sound
     public EnemyHealthController healthBar;
     private float maxLife;
 
@@ -68,6 +72,10 @@ public class BossEnemyController : MonoBehaviour
         animator = GetComponent<Animator>();
         player = GameObject.Find("Player").GetComponent<PlayerTest>().transform;
 
+        // Find the AudioSource component attached to this object
+        soundEffects = GetComponent<AudioSource>();
+        // If it doesn't exist, create one automatically
+        if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
         maxLife = live;
         healthBar.SetMaxLife(maxLife);
     }
@@ -278,9 +286,7 @@ public class BossEnemyController : MonoBehaviour
         nextJumpTime = Time.time + jumpCooldown;
     }
 
-
-
-    private void UpdateGroundedState() 
+    private void UpdateGroundedState()
     {
         wasGrounded = hasAnyGround;
         RaycastHit2D hitFront = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
@@ -345,6 +351,24 @@ public class BossEnemyController : MonoBehaviour
                 AirAttack();
                 nextAttackTime = Time.time + attackDelay;
             }
+        }
+    }
+
+    public void PlayMeleeSound()
+    {
+        if (meleeSound != null && soundEffects != null)
+        {
+            // Play melee sound
+            soundEffects.PlayOneShot(meleeSound);
+        }
+    }
+
+    public void PlayThrowSound()
+    {
+        if (throwSound != null && soundEffects != null)
+        {
+            // Play throw sound
+            soundEffects.PlayOneShot(throwSound);
         }
     }
 

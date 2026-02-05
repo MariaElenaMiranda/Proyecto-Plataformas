@@ -56,6 +56,9 @@ public class HardEnemyController : MonoBehaviour
     private bool canJumpToPlayer;
     private bool playerAlive;
 
+    [Header("Sound Effects")]
+    public AudioSource soundEffects; // The sound file to play
+    public AudioClip attackSound; // The sound file to play
     public EnemyHealthController healthBar;
     private float maxLife;
 
@@ -64,6 +67,12 @@ public class HardEnemyController : MonoBehaviour
         playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        player = GameObject.Find("HumanFinn").GetComponent<Transform>();
+
+        // Find the AudioSource component attached to this object
+        soundEffects = GetComponent<AudioSource>();
+        // If it doesn't exist, create one automatically
+        if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
 
         maxLife = live;
         healthBar.SetMaxLife(maxLife);
@@ -344,6 +353,17 @@ public class HardEnemyController : MonoBehaviour
         StartCoroutine(PerformAttack());
         nextAttackTime = Time.time + attackDelay;
     }
+
+        public void PlayAttackSound() // Method called by Animation Event
+    {
+        // Check if sound and speaker exist
+        if (attackSound != null && soundEffects != null)
+        {
+            soundEffects.pitch = Random.Range(0.8f, 1.2f); // Randomize pitch slightly for realism
+            soundEffects.PlayOneShot(attackSound); // Play the sound once
+        }
+    }
+
     public void TakeDamage(Vector2 direction, float amountDamage)
     {
         if (!takeDamage && !isAttacking)

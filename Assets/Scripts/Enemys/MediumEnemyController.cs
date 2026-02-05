@@ -3,44 +3,53 @@ using UnityEngine;
 
 public class MediumEnemyController : MonoBehaviour
 {
-
+    [Header("Target Configuration")]
     public Transform player;
 
+    [Header("Stats")]
     public float detectionRadius = 5f;
     public float attackRadius = 3.5f;
     public float moveSpeed = 2.0f;
     public float reboundForce = 5f;
+    public float live = 25f;
+
+    [Header("Attack Configuration")]
+    public float attackDelay = 3f;
+    public float meleeAttackDamage = 2f;
+    public float attackDamage = 7.5f;
+    private float nextAttackTime = 0f;
+
+    [Header("Fall & Damage Settings")]
+    public float minFallSpeed = 10f;
+    public float fallDamageMultiplier = 1.5f;
+    private float maxFallSpeed;
+
+    [Header("Ground Detection")]
+    public Transform groundCheck;
+    public Transform groundCheckBehind;
+    private bool frontGrounded;
+    private bool backGrounded;
+    private bool hasAnyGround;
+    public float groundCheckDistance = 0.5f;
+    public LayerMask groundLayer;
+
+    [Header("Internal Variables")]
     private Rigidbody2D rb;
     private float movementX;
     private bool isGrounded;
     private bool wasGrounded;
     private bool isFalling;
     private bool isAttacking;
-    public float attackDelay = 3f;
-    private float nextAttackTime = 0f;
-    public float meleeAttackDamage = 2f;
-    public float attackDamage = 7.5f;
-
-    public float live = 25f;
-    public float minFallSpeed = 10f;
-    public float fallDamageMultiplier = 1.5f;
-    private float maxFallSpeed;
-
     private bool isDead;
-    public GameObject crate;
     private Animator animator;
     private bool takeDamage = false;
-    
-    public Transform groundCheck;
-    public Transform groundCheckBehind;
-    private bool frontGrounded;
-    private bool backGrounded;
-    private bool hasAnyGround;
-
-    public float groundCheckDistance = 0.5f;
-    public LayerMask groundLayer;
-
     private bool playerAlive;
+    public GameObject crate;
+
+
+    [Header("Sound Effects")]
+    public AudioSource soundEffects; // Reference to the speaker
+    public AudioClip attackSound; // The sound file to play
 
     public EnemyHealthController healthBar;
     private float maxLife;
@@ -50,11 +59,17 @@ public class MediumEnemyController : MonoBehaviour
         playerAlive= true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        player = GameObject.Find("humanFin").GetComponent<Transform>();
+        player = GameObject.Find("HumanFinn").GetComponent<Transform>();
+
+        // Find the AudioSource component attached to this object
+        soundEffects = GetComponent<AudioSource>();
+        // If it doesn't exist, create one automatically
+        if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
 
         maxLife = live;
         healthBar.SetMaxLife(maxLife);
     }
+
     void Update()
     {
         if (playerAlive && !isDead)
@@ -65,6 +80,7 @@ public class MediumEnemyController : MonoBehaviour
         UpdateFallState();
         animator.SetBool("isDead", isDead);
         animator.SetBool("isAttacking", isAttacking);
+
         animator.SetBool("isGrounded", hasAnyGround);
         animator.SetFloat("verticalSpeed", rb.velocity.y);
         animator.SetFloat("speed", Mathf.Abs(movementX));
@@ -124,18 +140,17 @@ public class MediumEnemyController : MonoBehaviour
             Vector2 damageDirection = new Vector2(transform.position.x, 0);
 
             PlayerTest playerScript = collision.gameObject.GetComponent<PlayerTest>();
-            if (isAttacking) { 
+            if (isAttacking) {
                 playerScript.TakeDamage(damageDirection, attackDamage * meleeAttackDamage);
             }
-            else { 
+            else {
                 playerScript.TakeDamage(damageDirection, attackDamage);
             }
 
             playerAlive = !playerScript.isDead;
 
-            if (!playerAlive) { 
+            if (!playerAlive) {
                 movementX = 0;
-                
             }
         }
     }
@@ -161,7 +176,6 @@ public class MediumEnemyController : MonoBehaviour
         }
         if (!takeDamage && hasAnyGround) {
             rb.velocity = new Vector2(movementX * moveSpeed, rb.velocity.y);
-   
         }
     }
 
@@ -202,7 +216,6 @@ public class MediumEnemyController : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
 
@@ -228,6 +241,16 @@ public class MediumEnemyController : MonoBehaviour
             isAttacking = true;
             StartCoroutine(PerformAttack());
             nextAttackTime = Time.time + attackDelay;
+        }
+    }
+
+    public void PlayAttackSound() // Method called by Animation Event
+    {
+        // Check if sound and speaker exist
+        if (attackSound != null && soundEffects != null)
+        {
+            soundEffects.pitch = Random.Range(0.8f, 1.2f); // Randomize pitch slightly for realism
+            soundEffects.PlayOneShot(attackSound); // Play the sound once
         }
     }
 
