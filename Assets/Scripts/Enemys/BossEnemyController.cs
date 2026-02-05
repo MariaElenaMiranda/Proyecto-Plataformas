@@ -65,19 +65,24 @@ public class BossEnemyController : MonoBehaviour
     public EnemyHealthController healthBar;
     private float maxLife;
 
+    public EnemyCooldownController cooldownBar;
+    private float currentCooldown = 0f;
+
     void Start()
     {
-        playerAlive= true;
+        maxLife = live;
+        healthBar.SetMaxLife(maxLife);
+        playerAlive = true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         player = GameObject.Find("Player").GetComponent<PlayerTest>().transform;
 
+        
         // Find the AudioSource component attached to this object
         soundEffects = GetComponent<AudioSource>();
         // If it doesn't exist, create one automatically
         if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
-        maxLife = live;
-        healthBar.SetMaxLife(maxLife);
+      
     }
     void Update()
     {
@@ -91,6 +96,7 @@ public class BossEnemyController : MonoBehaviour
         UpdateGroundedState();
         UpdateObstacleState();
         UpdateFallState();
+        UpdateSwordCooldownUI();
         if (isAttacking || !playerAlive || isDead || takeDamage) return;
         Movement();
     }
@@ -380,7 +386,9 @@ public class BossEnemyController : MonoBehaviour
             Debug.Log("Boss Take Damage");
             takeDamage = true;
             animator.SetTrigger("hit");
+            Debug.Log("Vida antes: " + live);
             live -= amountDamage;
+            Debug.Log("Vida después: " + live);
             healthBar.UpdateLife(live);
             if (live <= 0)
             {
@@ -427,6 +435,8 @@ public class BossEnemyController : MonoBehaviour
         if (swordPrefab == null || player == null || !isGrounded || isAttacking || Time.time < launchTime) return;
         isAttacking = true;
         movementX = 0;
+        currentCooldown = 0f;
+        cooldownBar.SetCooldown(launchDelay);
         rb.velocity = new Vector2(0, rb.velocity.y);
         animator.SetTrigger("throw_sword");
         launchTime = Time.time + launchDelay;
@@ -452,6 +462,19 @@ public class BossEnemyController : MonoBehaviour
     {
         animator.SetTrigger("air_attack");
     }
+
+    private void UpdateSwordCooldownUI()
+    {
+        if (!haveSword)
+        {
+            currentCooldown += Time.deltaTime;
+            cooldownBar.UpdateCooldown(currentCooldown);
+        }
+        else
+        {
+            cooldownBar.UpdateCooldown(cooldownBar.maxCooldown);
+        }
+    }
     IEnumerator DisableDamage()
     {
         yield return new WaitForSeconds(0.5f);
@@ -459,9 +482,13 @@ public class BossEnemyController : MonoBehaviour
     }
     IEnumerator RecoverSwordCoroutine()
     {
-        yield return new WaitForSeconds(3f);
+        while (currentCooldown < launchDelay)
+        {
+            currentCooldown += Time.deltaTime;
+            cooldownBar.UpdateCooldown(currentCooldown);
+            yield return null;
+        }
         haveSword = true;
-        Debug.Log("El Boss ha recuperado su espada");
     }
 
     public void EndAttack()

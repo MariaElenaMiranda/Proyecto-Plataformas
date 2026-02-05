@@ -64,7 +64,9 @@ public class HardEnemyController : MonoBehaviour
 
     void Start()
     {
-        playerAlive= true;
+        maxLife = live;
+        healthBar.SetMaxLife(maxLife);
+        playerAlive = true;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         player = GameObject.Find("HumanFinn").GetComponent<Transform>();
@@ -74,8 +76,7 @@ public class HardEnemyController : MonoBehaviour
         // If it doesn't exist, create one automatically
         if(soundEffects == null) soundEffects = gameObject.AddComponent<AudioSource>();
 
-        maxLife = live;
-        healthBar.SetMaxLife(maxLife);
+       
     }
     void Update()
     {
