@@ -8,6 +8,7 @@ TagManager:
   - BottomLimit
   - BossSword
   - Decoration
+  - PowerUp
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - ground
   - Water
   - UI
-  - 
+  - CapSword
   - 
   - 
   - 

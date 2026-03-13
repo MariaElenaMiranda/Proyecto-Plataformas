@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4801602382196116038}
   - component: {fileID: 1483573759054278629}
   - component: {fileID: 582349632427198438}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BossSword
   m_TagString: BossSword
   m_Icon: {fileID: 0}

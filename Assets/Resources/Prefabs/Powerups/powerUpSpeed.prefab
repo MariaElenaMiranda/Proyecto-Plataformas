@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: powerUpSpeed
       objectReference: {fileID: 0}
+    - target: {fileID: 5280420708825610445, guid: 775271f80c670dc46b66daccb5c804a5, type: 3}
+      propertyPath: m_TagString
+      value: PowerUp
+      objectReference: {fileID: 0}
     - target: {fileID: 8392206108948191037, guid: 775271f80c670dc46b66daccb5c804a5, type: 3}
       propertyPath: m_Sprite
       value: 

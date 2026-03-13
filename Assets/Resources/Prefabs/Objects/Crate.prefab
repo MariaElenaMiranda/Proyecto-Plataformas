@@ -171,10 +171,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 245fbf8d70f5f4598af4cbbee801deb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  life: 20
+  life: 1
   chance: 80
+  qty: 1
   powerupsList:
   - {fileID: 8716996223052047158, guid: 98a602f9696d86b448a12530a0e3c314, type: 3}
   - {fileID: 7264378331536791917, guid: a06b2134ae84f254c9d0b8897fcdb054, type: 3}
+  - {fileID: 2705776151293302845, guid: c05a4e80bca8245d4b203a178fb5625f, type: 3}
   - {fileID: 3586269943689712914, guid: 15d0519d9ed09754b8ba80142a030e02, type: 3}
   - {fileID: 8121567893679382122, guid: fe9bcc6e83abd9649a5b743904581cd4, type: 3}

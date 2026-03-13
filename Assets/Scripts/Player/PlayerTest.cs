@@ -317,6 +317,10 @@ public class PlayerTest : MonoBehaviour
         SpeedPowerUpQty++;
         this.moveSpeed += this.moveSpeed * percent;
     }
+    public void IncreaseJumpForce(float percent)
+    {
+        this.jumpForce += this.jumpForce * percent;
+    }
 
     IEnumerator DeathSequence()
     {
